@@ -1,6 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { ChakraProvider } from "@chakra-ui/react";
+import { NavBar } from "./components/navbar";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             Learn React
           </a>
         </header>
+        <NavBar />
       </div>
     </ChakraProvider>
   );
