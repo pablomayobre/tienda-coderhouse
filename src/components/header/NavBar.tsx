@@ -22,6 +22,7 @@ import { FaInstagram } from "react-icons/fa";
 import { SearchBar } from "./SearchBar";
 import { Logo } from "./Logo";
 import { NavButton } from "./NavButton";
+import { AccountMenu, User } from "./AccountMenu";
 
 const links = [
   { key: "store", text: "Tienda", link: "#", icon: MdStore } as const,
@@ -30,9 +31,10 @@ const links = [
 
 export type LinkProps = {
   selected?: typeof links[any]["key"];
+  user?: User;
 };
 
-const NavDrawer = ({ selected }: LinkProps) => {
+const NavDrawer = ({ selected, user }: LinkProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -64,6 +66,7 @@ const NavDrawer = ({ selected }: LinkProps) => {
           <DrawerBody>
             <SearchBar />
             <Flex
+              as="nav"
               width="calc(100% + var(--chakra-space-6) * 2)"
               marginLeft={-6}
               marginRight={-6}
@@ -97,6 +100,8 @@ const NavDrawer = ({ selected }: LinkProps) => {
                 marginRight={4}
                 w="initial"
               />
+
+              {!user ? <AccountMenu isFullWidth /> : null}
             </Flex>
           </DrawerBody>
 
@@ -120,32 +125,36 @@ const NavDrawer = ({ selected }: LinkProps) => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      {user ? <AccountMenu user={user} /> : null}
     </>
   );
 };
 
-const NavButtons = ({ selected }: LinkProps) => {
+const NavButtons = ({ selected, user }: LinkProps) => {
   return (
     <>
       <SearchBar />
       <Spacer />
-      {links.map((item) => {
-        return (
-          <NavButton icon={item.icon} isSelected={selected === item.key}>
-            {item.text}
-          </NavButton>
-        );
-      })}
+      <Flex as="nav" alignItems="center" gridGap={2}>
+        {links.map((item) => {
+          return (
+            <NavButton icon={item.icon} isSelected={selected === item.key}>
+              {item.text}
+            </NavButton>
+          );
+        })}
+        <AccountMenu user={user} />
+      </Flex>
     </>
   );
 };
 
-export const Links = ({ selected }: LinkProps) => {
+export const NavBar = (props: LinkProps) => {
   const menu = useBreakpointValue({ base: "drawer", md: "buttons" });
 
   if (menu === "drawer") {
-    return <NavDrawer selected={selected} />;
+    return <NavDrawer {...props} />;
   } else {
-    return <NavButtons selected={selected} />;
+    return <NavButtons {...props} />;
   }
 };

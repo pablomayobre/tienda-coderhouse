@@ -11,16 +11,17 @@ import {
 } from "@chakra-ui/react";
 import { NavButton } from "./NavButton";
 
-type User = {
+export type User = {
   name: string;
   avatarUrl?: string;
 };
 
 type AccountMenuProps = {
   user?: User;
+  isFullWidth?: boolean;
 };
 
-export const AccountMenu = ({ user }: AccountMenuProps) => {
+export const AccountMenu = ({ user, isFullWidth }: AccountMenuProps) => {
   if (user) {
     return (
       <Menu gutter={16}>
@@ -45,6 +46,10 @@ export const AccountMenu = ({ user }: AccountMenuProps) => {
       </Menu>
     );
   } else {
-    return <NavButton icon={MdAccountCircle}>Iniciar Sesión</NavButton>;
+    return (
+      <NavButton icon={MdAccountCircle} isFullWidth={isFullWidth}>
+        Iniciar Sesión
+      </NavButton>
+    );
   }
 };

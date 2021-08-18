@@ -1,24 +1,29 @@
 import { Box, Flex, Spacer } from "@chakra-ui/react";
 import { Logo } from "./Logo";
-import { AccountMenu } from "./AccountMenu";
-import { Links } from "./Links";
+import { NavBar } from "./NavBar";
 
-export const NavBar = () => {
+export const Header = () => {
   return (
-    <Box as="nav" w="100%" background="white" h="56px" position="fixed" top="0">
+    <Box
+      as="header"
+      w="100%"
+      background="white"
+      h="56px"
+      position="fixed"
+      top="0"
+    >
       <Flex
         maxWidth="1000px"
         alignItems="center"
-        h="100%"
         gridGap={2}
+        h="100%"
         margin="0 auto"
         paddingLeft={4}
         paddingRight={4}
       >
         <Logo />
         <Spacer />
-        <Links selected="store" />
-        <AccountMenu user={{ name: "Usuario" }} />
+        <NavBar selected="store" />
       </Flex>
     </Box>
   );
