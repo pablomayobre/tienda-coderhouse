@@ -27,10 +27,12 @@ export const NavButton = ({
       sx={isFullWidth ? fullWidthStyles : undefined}
       leftIcon={<Icon as={icon} size={5} />}
       iconSpacing={1}
+      position="relative"
       colorScheme="purple"
       variant={isSelected ? "solid" : "ghost"}
     >
       {children}
+
     </Button>
   );
 };

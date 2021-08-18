@@ -17,20 +17,20 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { useRef } from "react";
-import { MdMenu, MdStore, MdShoppingCart } from "react-icons/md";
+import { MdMenu, MdStore } from "react-icons/md";
 import { FaInstagram } from "react-icons/fa";
 import { SearchBar } from "./SearchBar";
 import { Logo } from "./Logo";
 import { NavButton } from "./NavButton";
 import { AccountMenu, User } from "./AccountMenu";
+import { CartWidget } from "./CartWidget";
 
 const links = [
   { key: "store", text: "Tienda", link: "#", icon: MdStore } as const,
-  { key: "cart", text: "Mi Carrito", link: "#", icon: MdShoppingCart } as const,
 ];
 
 export type LinkProps = {
-  selected?: typeof links[any]["key"];
+  selected?: string;
   user?: User;
 };
 
@@ -82,9 +82,10 @@ const NavDrawer = ({ selected, user }: LinkProps) => {
                 w="initial"
               />
 
-              {links.map((item) => {
+              {links.map((item, index) => {
                 return (
                   <NavButton
+                    key={`nav${index}-${item.key}`}
                     isFullWidth
                     icon={item.icon}
                     isSelected={selected === item.key}
@@ -93,6 +94,8 @@ const NavDrawer = ({ selected, user }: LinkProps) => {
                   </NavButton>
                 );
               })}
+
+              <CartWidget isFullWidth isSelected={selected === "cart"} />
 
               <Divider
                 marginBottom={2}
@@ -136,13 +139,18 @@ const NavButtons = ({ selected, user }: LinkProps) => {
       <SearchBar />
       <Spacer />
       <Flex as="nav" alignItems="center" gridGap={2}>
-        {links.map((item) => {
+        {links.map((item, index) => {
           return (
-            <NavButton icon={item.icon} isSelected={selected === item.key}>
+            <NavButton
+              key={`nav${index}-${item.key}`}
+              icon={item.icon}
+              isSelected={selected === item.key}
+            >
               {item.text}
             </NavButton>
           );
         })}
+        <CartWidget isSelected={selected === "cart"} />
         <AccountMenu user={user} />
       </Flex>
     </>
