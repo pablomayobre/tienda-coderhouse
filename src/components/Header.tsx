@@ -8,12 +8,13 @@ export const Header = () => {
       as="header"
       w="100%"
       background="white"
-      h="56px"
+      h="header"
       position="fixed"
       top="0"
+      shadow="md"
     >
       <Flex
-        maxWidth="1000px"
+        maxWidth="container.lg"
         alignItems="center"
         gridGap={2}
         h="100%"
