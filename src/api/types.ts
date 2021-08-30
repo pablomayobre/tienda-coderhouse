@@ -5,3 +5,7 @@ export type ItemData = {
   price: number;
   pictureURL: string;
 };
+
+export type FullItemData = ItemData & {
+  categories: string[]
+}
