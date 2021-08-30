@@ -12,6 +12,7 @@ export const Header = () => {
       position="fixed"
       top="0"
       shadow="md"
+      zIndex={1000}
     >
       <Flex
         maxWidth="container.lg"

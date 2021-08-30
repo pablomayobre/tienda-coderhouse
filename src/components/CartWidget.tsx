@@ -15,7 +15,7 @@ const fullWidthStyles = {
 };
 
 export const CartWidget = ({ isSelected, isFullWidth }: CartProps) => {
-  const items = 10;
+  const items = 0;
 
   return (
     <NavButton
