@@ -38,7 +38,7 @@ export const Item = ({ item }: { item: ItemData }) => {
         <ItemImage src={item.pictureURL} alt="" />
       </Suspense>
       <Box paddingLeft={4} paddingRight={4} paddingTop={2} paddingBottom={4}>
-        <Text fontSize="3xl">{formatCurrency(item.price)}</Text>
+        <Text fontSize="3xl">{formatCurrency(item.basePrice)}</Text>
         <Heading as="h3" size="md">
           {item.title}
         </Heading>

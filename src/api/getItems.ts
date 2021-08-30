@@ -12,14 +12,16 @@ export const getItems = async (
 ): Promise<ItemData[]> => {
   await timeout(2000, abort);
 
-  let result = mock
+  let result = mock;
 
-  if (category) {
+  if (category && category !== "all") {
     result = mock.filter((value) => {
-      return value.categories.find((c) => c === category) !== undefined
-    })
+      if (category === "others") return (value.categories?.length ?? 0) === 0
+      return value.categories?.find((c) => c === category) !== undefined;
+    });
   }
-  return result;
+
+  return result.filter(({ display }) => display !== false);
 };
 
 export const useRefetchItems = () => {
