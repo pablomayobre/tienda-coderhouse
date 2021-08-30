@@ -1,4 +1,4 @@
-import { Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Heading, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { Suspense } from "react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useItems, useRefetchItems } from "../api/getItems";
@@ -23,8 +23,8 @@ const SuspenseFallback = ({ size }: { size: number }) => {
   );
 };
 
-const List = () => {
-  const { items } = useItems();
+const List = ({category}: {category?: string}) => {
+  const { items } = useItems(category);
 
   if (items.length === 0) return <>No items to show</>;
 
@@ -37,17 +37,27 @@ const List = () => {
   );
 };
 
-export const ItemList = () => {
-  const refetch = useRefetchItems();
+export const ItemList = ({title, category}: {title: string, category?: string}) => {
+  const refetch = useRefetchItems(category);
   const columns = 4;
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback} onReset={refetch}>
-      <SimpleGrid columns={columns} spacing={4} minChildWidth={200} margin={6}>
-        <Suspense fallback={<SuspenseFallback size={columns * 2} />}>
-          <List />
-        </Suspense>
-      </SimpleGrid>
-    </ErrorBoundary>
+    <Box paddingBottom={4}>
+      <Heading as="h2" textAlign="center">
+        {title}
+      </Heading>
+      <ErrorBoundary FallbackComponent={ErrorFallback} onReset={refetch}>
+        <SimpleGrid
+          columns={columns}
+          spacing={4}
+          minChildWidth={200}
+          margin={6}
+        >
+          <Suspense fallback={<SuspenseFallback size={columns * 2} />}>
+            <List category={category}/>
+          </Suspense>
+        </SimpleGrid>
+      </ErrorBoundary>
+    </Box>
   );
 };

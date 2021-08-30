@@ -1,6 +1,6 @@
 import useSWRImmutable from "swr/immutable";
 import { useSWRConfig } from "swr";
-import { useRef, useCallback } from "react";
+import { useRef } from "react";
 
 import { timeout } from "./helpers";
 import { ItemData } from "./types";
@@ -24,10 +24,10 @@ export const getItems = async (
   return result.filter(({ display }) => display !== false);
 };
 
-export const useRefetchItems = () => {
+export const useRefetchItems = (category?: string) => {
   const { mutate } = useSWRConfig();
 
-  return useCallback(() => mutate("api/items"), [mutate]);
+  return () => mutate("api/items");
 };
 
 export const useItems = (category?: string) => {
