@@ -1,6 +1,6 @@
 import { FullItem } from "./types";
 
-const Items: FullItem[] = [
+const Items = [
   {
     id: "gameboy-color",
     title: "Game Boy Color",
@@ -34,13 +34,24 @@ const Items: FullItem[] = [
     variants: {
       color: {
         displayName: "Color",
-        type: "dropdown",
+        type: "color",
         default: 1,
         values: {
           black: { displayName: "Negro", color: "#000000" },
           white: { displayName: "Blanco", color: "#ffffff" },
         },
       },
+      size: {
+        displayName: "Talle",
+        type: "dropdown",
+        default: 2,
+        values: {
+          size38: {displayName: "38"},
+          size39: {displayName: "39"},
+          size40: {displayName: "40"},
+          size42: {displayName: "42"}
+        }
+      }
     },
     stock: 100,
     display: true,
@@ -103,6 +114,6 @@ const Items: FullItem[] = [
     pictureURL:
       "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1567&q=80",
   },
-];
+] as FullItem[];
 
 export default Items;
