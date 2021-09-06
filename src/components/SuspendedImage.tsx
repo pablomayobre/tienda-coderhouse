@@ -36,7 +36,7 @@ const ImageView = ({
   useSuspenseImage(src);
 
   return (
-    <AspectRatio flexGrow={1} {...ratio}>
+    <AspectRatio {...ratio}>
       <ChakraImage src={src} alt={alt} objectFit="cover" />
     </AspectRatio>
   );
@@ -48,7 +48,7 @@ export const ImageSkeleton = ({
   ...ratio
 }: Partial<SuspendedImageProps>) => {
   return (
-    <Skeleton flexGrow={1}>
+    <Skeleton>
       <AspectRatio {...ratio}>
         <ChakraImage />
       </AspectRatio>

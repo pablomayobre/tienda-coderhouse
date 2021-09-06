@@ -56,25 +56,26 @@ export const ItemDetail = ({ id }: { id: string }) => {
 export const ItemDetailSuspense = () => {
   return (
     <Box minHeight="100vh">
-      <Skeleton>
-        <Heading as="h2">"My Item"</Heading>
-      </Skeleton>
-
-      <Stack direction="row" flexGrow={1}>
-        <SuspendedImage src="" alt="" ratio={1} maxWidth="70vh" />
-        <Stack>
-          <Skeleton>
-            <Text fontSize="3xl">$1000.00</Text>
-          </Skeleton>
-          <Skeleton>
-            <Text>Stock: 10</Text>
-          </Skeleton>
-          <Skeleton>
-            <ItemCount max={0} min={0} />
-          </Skeleton>
-          <Skeleton>
-            <Button>Agregar al Carrito</Button>
-          </Skeleton>
+      <Stack direction="row" justifyContent="center" flexGap={20}>
+        <SuspendedImage
+          src=""
+          alt=""
+          ratio={1}
+          minWidth="500px"
+          flexGrow={0}
+        />
+        <Stack maxWidth="container.sm">
+          <Skeleton><Heading as="h2">My item</Heading></Skeleton>
+          <Skeleton><Text fontSize="3xl">$ 100.00</Text></Skeleton>
+          <Skeleton><ItemCount max={0} min={0} /></Skeleton>
+          <Skeleton><Text
+            fontSize="sm"
+            textAlign="right"
+            sx={{ marginTop: "0!important" }}
+          >
+            100 unidades
+          </Text></Skeleton>
+          <Skeleton><Button>Agregar al Carrito</Button></Skeleton>
         </Stack>
       </Stack>
     </Box>
