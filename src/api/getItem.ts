@@ -3,13 +3,15 @@ import { useSWRConfig } from "swr";
 import { useRef } from "react";
 
 import { timeout } from "./helpers";
-import { FullItemData } from "./types";
+import { FullItem } from "./types";
 import mock from "./mock";
+
+export type {Variants, Value} from "./types"
 
 export const getItem = async (
   id: string,
   abort?: AbortSignal
-): Promise<FullItemData> => {
+): Promise<FullItem> => {
   await timeout(2000, abort);
 
   let result = mock.find((item) => item.id === id)
@@ -28,7 +30,7 @@ export const useRefetchItem = (id: string) => {
 export const useItem = (id: string) => {
   const aborter = useRef<AbortController>();
 
-  const { data: item, mutate: refetch } = useSWRImmutable<FullItemData>(
+  const { data: item, mutate: refetch } = useSWRImmutable<FullItem>(
     [`api/item/${id}`, id],
     async (key, id) => {
       if (aborter.current) {

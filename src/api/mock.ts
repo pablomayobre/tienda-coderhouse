@@ -1,13 +1,13 @@
-import { FullItemData } from "./types";
+import { FullItem } from "./types";
 
-const Items: FullItemData[] = [
+const Items: FullItem[] = [
   {
     id: "gameboy-color",
     title: "Game Boy Color",
     description:
       "La Game Boy Color es una consola de videojuegos portatil lanzada en el año 1998, hoy considerada una reliquia",
     categories: ["tecnologia", "video-juegos", "amarillo"],
-    basePrice: 10,
+    price: 10,
     stock: 2,
     display: true,
     pictureURL:
@@ -18,7 +18,7 @@ const Items: FullItemData[] = [
     title: "Cupcake",
     description: "Un perfecto cupcake color amarillo",
     categories: ["comida", "amarillo"],
-    basePrice: 10,
+    price: 10,
     stock: 18,
     display: true,
     pictureURL:
@@ -30,12 +30,19 @@ const Items: FullItemData[] = [
     description:
       "Unas zapatillas marca Vans On the Wall, hechas de tela y gamuza negra.",
     categories: ["ropa", "amarillo"],
-    basePrice: 10,
+    price: 10,
     variants: {
-      name: "Color",
-      type: "color",
-      values: [{ default: true, name: "black", color: "#FFFFFF", stock: 10 }],
+      color: {
+        displayName: "Color",
+        type: "dropdown",
+        default: 1,
+        values: {
+          black: { displayName: "Negro", color: "#000000" },
+          white: { displayName: "Blanco", color: "#ffffff" },
+        },
+      },
     },
+    stock: 100,
     display: true,
     pictureURL:
       "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=343&q=80",
@@ -45,7 +52,7 @@ const Items: FullItemData[] = [
     title: "Modelo Fiat 600",
     description: "Un modelo a escala de colección de un Fiat 600.",
     categories: ["autos", "amarillo"],
-    basePrice: 10,
+    price: 10,
     stock: 4,
     display: true,
     pictureURL:
@@ -56,7 +63,7 @@ const Items: FullItemData[] = [
     title: "Mando de XBox One",
     description: "Un mando de XBox One en su color blanco original.",
     categories: ["tecnologia", "video-juegos", "blanco"],
-    basePrice: 10,
+    price: 10,
     stock: 16,
     display: true,
     pictureURL:
@@ -67,7 +74,7 @@ const Items: FullItemData[] = [
     title: "Modelo de Ferrari",
     description: "Un modelo a escala de colección de un auto Ferrari.",
     categories: ["autos", "blanco"],
-    basePrice: 10,
+    price: 10,
     stock: 4,
     display: true,
     pictureURL:
@@ -78,7 +85,7 @@ const Items: FullItemData[] = [
     title: "Apple Airpods",
     description: "Los Apple Airpods son auriculares inalambricos.",
     categories: ["tecnologia", "blanco"],
-    basePrice: 10,
+    price: 10,
     stock: 20,
     display: true,
     pictureURL:
@@ -90,7 +97,7 @@ const Items: FullItemData[] = [
     description:
       "Amazon Echo acerca a Alexa, tu asistente personal, a donde quiera que la necesites.",
     categories: ["tecnologia", "blanco"],
-    basePrice: 10,
+    price: 10,
     stock: 15,
     display: true,
     pictureURL:

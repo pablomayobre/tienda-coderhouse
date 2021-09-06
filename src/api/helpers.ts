@@ -6,8 +6,8 @@ export const timeout = (time: number, abort?: AbortSignal) => {
 
     if (abort) {
       abort.addEventListener("abort", function () {
-        const error = new Error("Timeout canceled")
-        error.name = "AbortError"
+        const error = new Error("Timeout canceled");
+        error.name = "AbortError";
 
         clearTimeout(handle);
         reject(error);
@@ -16,8 +16,11 @@ export const timeout = (time: number, abort?: AbortSignal) => {
   });
 };
 
-const CURRENCY_FORMAT = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
+const CURRENCY_FORMAT = new Intl.NumberFormat("es-AR", {
+  style: "currency",
+  currency: "ARS",
+});
 
 export const formatCurrency = (price: number) => {
   return CURRENCY_FORMAT.format(price);
-}
+};

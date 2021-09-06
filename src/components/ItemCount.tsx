@@ -15,8 +15,8 @@ export const ItemCount = (props: UseNumberInputProps) => {
   return (
     <Flex maxWidth={64}>
       <IconButton
-        {...getIncrementButtonProps()}
-        icon={<Icon as={MdAdd} size={5} />}
+        {...getDecrementButtonProps()}
+        icon={<Icon as={MdRemove} size={5} />}
         aria-label="Incrementar"
         borderTopRightRadius={0}
         borderBottomRightRadius={0}
@@ -33,8 +33,8 @@ export const ItemCount = (props: UseNumberInputProps) => {
         textAlign="center"
       />
       <IconButton
-        {...getDecrementButtonProps()}
-        icon={<Icon as={MdRemove} size={5} />}
+        {...getIncrementButtonProps()}
+        icon={<Icon as={MdAdd} size={5} />}
         aria-label="Decrementar"
         borderTopLeftRadius={0}
         borderBottomLeftRadius={0}

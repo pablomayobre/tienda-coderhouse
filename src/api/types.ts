@@ -2,39 +2,30 @@ export interface ItemData {
   readonly id: string;
   readonly title: string;
   readonly description: string;
-  readonly basePrice: number;
+  readonly price: number;
   readonly discount?: number;
   readonly pictureURL: string;
 }
 
 export type VariantType = "dropdown" | "color"
 
-type Value<
-  Type extends VariantType,
-> = {
-  readonly default?: boolean,
-  readonly name: string;
-  readonly color: Type extends "color" ? string : undefined;
-  readonly extraPrice?: number;
+export type Value<T> = {
+  readonly displayName?: string;
+  readonly color: T extends "color" ? string : unknown;
 };
 
-type WithVariantsOrStock<T> = (T & {
-  readonly variants: Variant<VariantType>
-})| (T & {
-  readonly stock: number
-})
-
-type Variant<
-  Type extends VariantType,
-> = {
-  readonly values: ReadonlyArray<WithVariantsOrStock<Value<VariantType>>>;
-  readonly name: string;
-  readonly type: Type;
+export interface Variants<T extends VariantType> {
+  readonly type: T;
+  readonly displayName?: string;
+  readonly default: number;
+  readonly values: Readonly<Record<string, Value<T>>>
 }
 
-interface FullItem extends ItemData {
+type GenericVariant = Variants<"color"> | Variants<"dropdown">
+
+export interface FullItem extends ItemData {
   readonly categories?: ReadonlyArray<string>;
   readonly display?: boolean;
+  readonly stock: number;
+  variants?: Readonly<Record<string, GenericVariant>>
 }
-
-export type FullItemData = WithVariantsOrStock<FullItem>

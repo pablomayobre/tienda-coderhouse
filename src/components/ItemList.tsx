@@ -1,10 +1,9 @@
-import { Box, Heading, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
-import { Suspense } from "react";
-import { ErrorBoundary, FallbackProps } from "react-error-boundary";
-import { useItems, useRefetchItems } from "../api/getItems";
+import { Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import { FallbackProps } from "react-error-boundary";
+import { useItems } from "../api/getItems";
 import { Item, ItemSkeleton } from "./Item";
 
-const ErrorFallback = ({ resetErrorBoundary }: FallbackProps) => {
+export const ItemListError = ({ resetErrorBoundary }: FallbackProps) => {
   return (
     <Flex direction="column" alignItems="center" justifyContent="center">
       <Text fontSize="3xl">Hubo un error al cargar los items</Text>
@@ -13,51 +12,40 @@ const ErrorFallback = ({ resetErrorBoundary }: FallbackProps) => {
   );
 };
 
-const SuspenseFallback = ({ size }: { size: number }) => {
+export const ItemListSuspense = ({
+  columns = 4,
+  rows = 2,
+}: {
+  columns?: number;
+  rows?: number;
+}) => {
   return (
-    <>
-      {new Array(size).fill(0).map((value, index) => {
+    <SimpleGrid columns={columns} spacing={4} minChildWidth={200} margin={6}>
+      {new Array(columns * rows).fill(0).map((value, index) => {
         return <ItemSkeleton key={index} />;
       })}
-    </>
+    </SimpleGrid>
   );
 };
 
-const List = ({category}: {category?: string}) => {
+export const ItemList = ({
+  category,
+  columns = 4,
+}: {
+  category?: string;
+  columns?: number;
+}) => {
   const { items } = useItems(category);
 
   if (items.length === 0) return <>No items to show</>;
 
   return (
-    <>
+    <SimpleGrid columns={columns} spacing={4} minChildWidth={200} margin={6}>
       {items.map((item, index) => {
         return <Item key={index} item={item} />;
       })}
-    </>
+    </SimpleGrid>
   );
 };
 
-export const ItemList = ({title, category}: {title: string, category?: string}) => {
-  const refetch = useRefetchItems(category);
-  const columns = 4;
 
-  return (
-    <Box paddingBottom={4}>
-      <Heading as="h2" textAlign="center">
-        {title}
-      </Heading>
-      <ErrorBoundary FallbackComponent={ErrorFallback} onReset={refetch}>
-        <SimpleGrid
-          columns={columns}
-          spacing={4}
-          minChildWidth={200}
-          margin={6}
-        >
-          <Suspense fallback={<SuspenseFallback size={columns * 2} />}>
-            <List category={category}/>
-          </Suspense>
-        </SimpleGrid>
-      </ErrorBoundary>
-    </Box>
-  );
-};
