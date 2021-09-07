@@ -1,12 +1,14 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Header } from "./components/Header";
 import { Layout } from "./components/Layout";
-import { ItemDetailContainer } from "./components/ItemDetailContainer";
-import { ItemListContainer } from "./components/ItemListContainer";
 import { CustomTheme } from "./CustomTheme";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { lazy } from "react";
 
 const theme = extendTheme(CustomTheme);
+
+const ItemListView = lazy(() => import("./views/ItemListView"));
+const ItemDetailView = lazy(() => import("./views/ItemDetailView"));
 
 function App() {
   return (
@@ -15,9 +17,9 @@ function App() {
         <Header />
         <Layout>
           <Routes>
-            <Route path="/" element={<ItemListContainer />} />
-            <Route path="item/:id" element={<ItemDetailContainer />} />
-            <Route path="category/:category" element={<ItemListContainer />} />
+            <Route path="/" element={<ItemListView />} />
+            <Route path="item/:id" element={<ItemDetailView />} />
+            <Route path="category/:category" element={<ItemListView />} />
           </Routes>
         </Layout>
       </BrowserRouter>

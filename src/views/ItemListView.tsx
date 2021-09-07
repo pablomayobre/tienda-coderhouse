@@ -4,9 +4,9 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useParams } from "react-router";
 import { useRefetchItems } from "../api/getItems";
 import { formatCategory } from "../api/helpers";
-import { ItemListError, ItemListSuspense, ItemList } from "./ItemList";
+import { ItemListError, ItemListSuspense, ItemList } from "../components/ItemList";
 
-export const ItemListContainer = () => {
+const ItemListView = () => {
   const {category} = useParams()
   const refetch = useRefetchItems(category ?? "all");
   const columns = 4;
@@ -25,3 +25,5 @@ export const ItemListContainer = () => {
     </Box>
   );
 };
+
+export default ItemListView

@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import { Suspense } from "react";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ export const Layout = ({ children }: LayoutProps) => {
       marginLeft="auto"
       marginRight="auto"
     >
-      {children}
+      <Suspense fallback={<></>}>{children}</Suspense>
     </Box>
   );
 };

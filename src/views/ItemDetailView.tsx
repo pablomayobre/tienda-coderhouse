@@ -2,9 +2,9 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useParams } from "react-router";
 import { useRefetchItem } from "../api/getItem";
-import { ItemDetailSuspense, ItemDetail, ItemDetailError } from "./ItemDetail";
+import { ItemDetailSuspense, ItemDetail, ItemDetailError } from "../components/ItemDetail";
 
-export const ItemDetailContainer = () => {
+const ItemDetailView = () => {
   const {id} = useParams()
   const refetch = useRefetchItem(id ?? "");
 
@@ -16,3 +16,5 @@ export const ItemDetailContainer = () => {
     </ErrorBoundary>
   );
 };
+
+export default ItemDetailView
