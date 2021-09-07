@@ -6,8 +6,6 @@ import { timeout } from "./helpers";
 import { FullItem } from "./types";
 import mock from "./mock";
 
-export type {Variants, Value} from "./types"
-
 export const getItem = async (
   id: string,
   abort?: AbortSignal

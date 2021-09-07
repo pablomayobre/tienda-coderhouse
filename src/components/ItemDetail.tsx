@@ -7,38 +7,44 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { FallbackProps } from "react-error-boundary";
+import { useNavigate } from "react-router";
 import { useItem } from "../api/getItem";
 import { formatCurrency } from "../api/helpers";
-import { ColorVariantPicker } from "./ColorVariantPicker";
-import { DropdownVariantPicker } from "./DropdownVariantPicker";
 import { ItemCount } from "./ItemCount";
 import { SuspendedImage } from "./SuspendedImage";
+import { getDefaultVariants, VariantPicker } from "./VariantPicker";
 
-export const ItemDetail = ({ id }: { id: string }) => {
+export const ItemDetail = ({ id }: { id: string; }) => {
   const { item } = useItem(id);
+  const navigate = useNavigate()
 
-  const variants = item.variants ? Object.entries(item.variants) : [];
+  const [selectedVariants, setVariants] = useState(getDefaultVariants(item));
+  const [selectedQuantity, setQuantity] = useState(0);
 
   return (
     <Box minHeight="100vh">
-      <Stack direction="row" justifyContent="center" flexGap={20}>
+      <Stack direction="row" justifyContent="center" gridGap={20}>
         <SuspendedImage
           src={item.pictureURL}
           alt=""
           ratio={1}
           minWidth="500px"
-          flexGrow={0}
-        />
+          flexGrow={0} />
         <Stack maxWidth="container.sm">
           <Heading as="h2">{item.title}</Heading>
           <Text fontSize="3xl">{formatCurrency(item.price)}</Text>
-          {variants.map(([name, variant], index) => {
-            return variant.type === "color" ? (
-              <ColorVariantPicker key={index} variant={variant} variantName={name} />
-            ) : <DropdownVariantPicker key={index} variant={variant} variantName={name} />;
-          }) ?? null}
-          <ItemCount max={item.stock} min={0} />
+          <VariantPicker
+            variants={item.variants}
+            selected={selectedVariants}
+            setSelected={setVariants} />
+          <ItemCount
+            onChange={(s, value) => {
+              setQuantity(value);
+            }}
+            max={item.stock}
+            min={0} />
           <Text
             fontSize="sm"
             textAlign="right"
@@ -46,7 +52,24 @@ export const ItemDetail = ({ id }: { id: string }) => {
           >
             {item.stock} unidades
           </Text>
-          <Button>Agregar al Carrito</Button>
+          <Button
+            disabled={selectedQuantity === 0}
+            onClick={() => {
+              const variants = Object.entries(selectedVariants)
+                .map(([name, value]) => {
+                  return `${name}: ${value}`;
+                })
+                .join(", ");
+
+              console.log(
+                `Added to cart: ${selectedQuantity} ${item.title} (${variants})`
+              );
+
+              navigate("/cart")
+            }}
+          >
+            Agregar al Carrito
+          </Button>
         </Stack>
       </Stack>
     </Box>
@@ -56,26 +79,30 @@ export const ItemDetail = ({ id }: { id: string }) => {
 export const ItemDetailSuspense = () => {
   return (
     <Box minHeight="100vh">
-      <Stack direction="row" justifyContent="center" flexGap={20}>
-        <SuspendedImage
-          src=""
-          alt=""
-          ratio={1}
-          minWidth="500px"
-          flexGrow={0}
-        />
+      <Stack direction="row" justifyContent="center" gridGap={20}>
+        <SuspendedImage src="" alt="" ratio={1} minWidth="500px" flexGrow={0} />
         <Stack maxWidth="container.sm">
-          <Skeleton><Heading as="h2">My item</Heading></Skeleton>
-          <Skeleton><Text fontSize="3xl">$ 100.00</Text></Skeleton>
-          <Skeleton><ItemCount max={0} min={0} /></Skeleton>
-          <Skeleton><Text
-            fontSize="sm"
-            textAlign="right"
-            sx={{ marginTop: "0!important" }}
-          >
-            100 unidades
-          </Text></Skeleton>
-          <Skeleton><Button>Agregar al Carrito</Button></Skeleton>
+          <Skeleton>
+            <Heading as="h2">My item</Heading>
+          </Skeleton>
+          <Skeleton>
+            <Text fontSize="3xl">$ 100.00</Text>
+          </Skeleton>
+          <Skeleton>
+            <ItemCount max={0} min={0} />
+          </Skeleton>
+          <Skeleton>
+            <Text
+              fontSize="sm"
+              textAlign="right"
+              sx={{ marginTop: "0!important" }}
+            >
+              100 unidades
+            </Text>
+          </Skeleton>
+          <Skeleton>
+            <Button>Agregar al Carrito</Button>
+          </Skeleton>
         </Stack>
       </Stack>
     </Box>

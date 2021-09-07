@@ -1,21 +1,25 @@
 import {
-  Box, Heading, useRadio,
+  Box,
+  Heading,
+  useRadio,
   useRadioGroup,
-  UseRadioProps
+  UseRadioProps,
 } from "@chakra-ui/react";
 import { useCallback } from "react";
-import { Variants, Value } from "../api/getItem";
 import { useCallbackProp } from "../hooks/useCallbackProp";
+import type { Variants, Value } from "../api/types";
+import type {GenericVariantProps} from "./VariantPicker"
 
 type ColorVariantProps = UseRadioProps & {
   variant: Value<"color">;
 };
+
 const ColorVariant = ({ variant, ...props }: ColorVariantProps) => {
   const { getInputProps, getCheckboxProps } = useRadio({ ...props });
 
   const input = getInputProps();
   const checkbox = getCheckboxProps();
-  const checked = (checkbox as unknown as { "data-checked": "" | undefined; })["data-checked"] !== undefined;
+  const checked = (checkbox as any)["data-checked"] !== undefined;
 
   return (
     <Box as="label">
@@ -54,24 +58,27 @@ const ColorVariant = ({ variant, ...props }: ColorVariantProps) => {
     </Box>
   );
 };
-type ColorVariantPickerProps = {
+
+export type ColorVariantPickerProps = GenericVariantProps & {
   variant: Variants<"color">;
-  variantName: string;
-  onChange?: (value: number) => void;
 };
+
 export const ColorVariantPicker = ({
-  variant, variantName, onChange,
+  variant,
+  variantName,
+  onChange,
+  selected,
 }: ColorVariantPickerProps) => {
-  const onNumberChange = useCallbackProp(onChange);
-  const onStringChange = useCallback(
-    (value: string) => onNumberChange(Number(value)),
-    [onNumberChange]
+  const onVariantChange = useCallbackProp(onChange);
+  const onSelected = useCallback(
+    (value: string) => onVariantChange(variantName, value),
+    [onVariantChange, variantName]
   );
 
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "framework",
-    defaultValue: variant.default.toString(),
-    onChange: onStringChange,
+    name: variantName,
+    value: selected,
+    onChange: onSelected,
   });
 
   return (
@@ -79,11 +86,12 @@ export const ColorVariantPicker = ({
       <Heading as="h4" size="sm" marginBottom={2}>
         {variant.displayName ?? variantName}:
       </Heading>
-      {Object.entries(variant.values).map(([name, variant], value) => (
+      {Object.entries(variant.values).map(([value, variant], index) => (
         <ColorVariant
-          key={value}
-          {...getRadioProps({ value: value.toString() })}
-          variant={variant} />
+          key={index}
+          {...getRadioProps({ value })}
+          variant={variant}
+        />
       ))}
     </Box>
   );

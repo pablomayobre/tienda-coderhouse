@@ -35,7 +35,7 @@ const Items = [
       color: {
         displayName: "Color",
         type: "color",
-        default: 1,
+        default: "white",
         values: {
           black: { displayName: "Negro", color: "#000000" },
           white: { displayName: "Blanco", color: "#ffffff" },
@@ -44,7 +44,7 @@ const Items = [
       size: {
         displayName: "Talle",
         type: "dropdown",
-        default: 2,
+        default: "size40",
         values: {
           size38: {displayName: "38"},
           size39: {displayName: "39"},

@@ -17,11 +17,11 @@ export type Value<T> = {
 export interface Variants<T extends VariantType> {
   readonly type: T;
   readonly displayName?: string;
-  readonly default: number;
+  readonly default: string;
   readonly values: Readonly<Record<string, Value<T>>>
 }
 
-type GenericVariant = Variants<"color"> | Variants<"dropdown">
+export type GenericVariant = Variants<"color"> | Variants<"dropdown">
 
 export interface FullItem extends ItemData {
   readonly categories?: ReadonlyArray<string>;
