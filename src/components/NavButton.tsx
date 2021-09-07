@@ -1,8 +1,10 @@
 import { Button, Icon } from "@chakra-ui/react";
 import { IconType } from "react-icons/lib";
+import { Link, useMatch } from "react-router-dom";
 
 type NavButtonProps = {
-  isSelected?: boolean;
+  to: string;
+  end?: boolean;
   icon: IconType;
   isFullWidth?: boolean;
   children: React.ReactNode;
@@ -16,14 +18,17 @@ const fullWidthStyles = {
 
 export const NavButton = ({
   isFullWidth,
-  isSelected,
   icon,
   children,
+  to,
+  end
 }: NavButtonProps) => {
+  const isSelected = !!useMatch(`${to}${end ? "" : "*"}`)
+
   return (
     <Button
-      as="a"
-      href="#"
+      as={Link}
+      to={to}
       sx={isFullWidth ? fullWidthStyles : undefined}
       leftIcon={<Icon as={icon} size={5} />}
       iconSpacing={1}
@@ -32,7 +37,6 @@ export const NavButton = ({
       variant={isSelected ? "solid" : "ghost"}
     >
       {children}
-
     </Button>
   );
 };

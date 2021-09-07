@@ -24,3 +24,7 @@ const CURRENCY_FORMAT = new Intl.NumberFormat("es-AR", {
 export const formatCurrency = (price: number) => {
   return CURRENCY_FORMAT.format(price);
 };
+
+export const formatCategory = (category: string) => {
+  return category.trim().split("-").map((str) => str.charAt(0).toUpperCase() + str.slice(1)).join(" ")
+}

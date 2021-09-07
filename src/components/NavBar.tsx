@@ -26,7 +26,7 @@ import { AccountMenu, User } from "./AccountMenu";
 import { CartWidget } from "./CartWidget";
 
 const links = [
-  { key: "store", text: "Tienda", link: "#", icon: MdStore } as const,
+  { key: "store", text: "Tienda", link: "/", end: true, icon: MdStore } as const,
 ];
 
 export type LinkProps = {
@@ -88,7 +88,8 @@ const NavDrawer = ({ selected, user }: LinkProps) => {
                     key={`nav${index}-${item.key}`}
                     isFullWidth
                     icon={item.icon}
-                    isSelected={selected === item.key}
+                    to={item.link}
+                    end={item.end}
                   >
                     {item.text}
                   </NavButton>
@@ -144,7 +145,8 @@ const NavButtons = ({ selected, user }: LinkProps) => {
             <NavButton
               key={`nav${index}-${item.key}`}
               icon={item.icon}
-              isSelected={selected === item.key}
+              to={item.link}
+              end={item.end}
             >
               {item.text}
             </NavButton>

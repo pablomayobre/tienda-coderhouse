@@ -14,14 +14,15 @@ const fullWidthStyles = {
   marginLeft: 2,
 };
 
-export const CartWidget = ({ isSelected, isFullWidth }: CartProps) => {
+export const CartWidget = ({ isFullWidth }: CartProps) => {
   const items = 0;
 
   return (
     <NavButton
       icon={MdShoppingCart}
       isFullWidth={isFullWidth}
-      isSelected={isSelected}
+      to="/cart"
+      end
     >
       Mi Carrito
       {items > 0 ? (

@@ -25,7 +25,7 @@ export const Header = () => {
       >
         <Logo />
         <Spacer />
-        <NavBar selected="store" />
+        <NavBar selected="store" user={{name: "Usuario"}}/>
       </Flex>
     </Box>
   );

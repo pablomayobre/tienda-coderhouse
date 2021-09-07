@@ -10,6 +10,7 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { NavButton } from "./NavButton";
+import { Link } from "react-router-dom";
 
 export type User = {
   name: string;
@@ -32,12 +33,19 @@ export const AccountMenu = ({ user, isFullWidth }: AccountMenuProps) => {
           </Text>
           <MenuDivider />
           <MenuItem
+            as={Link}
+            to="/user/orders"
             iconSpacing={1}
             icon={<Icon as={MdShoppingBasket} size={5} />}
           >
-            Ver Compras
+            Mis Ordenes
           </MenuItem>
-          <MenuItem iconSpacing={1} icon={<Icon as={MdSettings} size={5} />}>
+          <MenuItem
+            as={Link}
+            to="/user/settings"
+            iconSpacing={1}
+            icon={<Icon as={MdSettings} size={5} />}
+          >
             Configuración
           </MenuItem>
           <MenuDivider />
@@ -47,7 +55,12 @@ export const AccountMenu = ({ user, isFullWidth }: AccountMenuProps) => {
     );
   } else {
     return (
-      <NavButton icon={MdAccountCircle} isFullWidth={isFullWidth}>
+      <NavButton
+        icon={MdAccountCircle}
+        isFullWidth={isFullWidth}
+        to="/login"
+        end
+      >
         Iniciar Sesión
       </NavButton>
     );
