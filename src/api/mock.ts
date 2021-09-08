@@ -1,5 +1,14 @@
 import { FullItem } from "./types";
 
+import GameBoyColorImage from "../assets/gameboy-color.webp";
+import CupcakeImage from "../assets/cupcake.webp";
+import ZapatillasVansImage from "../assets/zapatillas-vans.webp";
+import ModeloFiat600Image from "../assets/modelo-fiat600.webp";
+import MandoXboxOneImage from "../assets/mando-xboxone.webp";
+import ModeloFerrariImage from "../assets/modelo-ferrari.webp";
+import AppleAirpodsImage from "../assets/apple-airpods.webp";
+import AmazonEchoImage from "../assets/amazon-echo.webp";
+
 const Items = [
   {
     id: "gameboy-color",
@@ -10,8 +19,7 @@ const Items = [
     price: 10,
     stock: 2,
     display: true,
-    pictureURL:
-      "https://images.unsplash.com/photo-1531525645387-7f14be1bdbbd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1400&q=80",
+    pictureURL: GameBoyColorImage,
   },
   {
     id: "cupcake",
@@ -21,8 +29,7 @@ const Items = [
     price: 10,
     stock: 18,
     display: true,
-    pictureURL:
-      "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1400&q=80",
+    pictureURL: CupcakeImage,
   },
   {
     id: "zapatillas-vans",
@@ -46,17 +53,16 @@ const Items = [
         type: "dropdown",
         default: "size40",
         values: {
-          size38: {displayName: "38"},
-          size39: {displayName: "39"},
-          size40: {displayName: "40"},
-          size42: {displayName: "42"}
-        }
-      }
+          size38: { displayName: "38" },
+          size39: { displayName: "39" },
+          size40: { displayName: "40" },
+          size42: { displayName: "42" },
+        },
+      },
     },
     stock: 100,
     display: true,
-    pictureURL:
-      "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=343&q=80",
+    pictureURL: ZapatillasVansImage,
   },
   {
     id: "modelo-fiat600",
@@ -66,8 +72,7 @@ const Items = [
     price: 10,
     stock: 4,
     display: true,
-    pictureURL:
-      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80",
+    pictureURL: ModeloFiat600Image,
   },
   {
     id: "mando-xboxone",
@@ -77,8 +82,7 @@ const Items = [
     price: 10,
     stock: 16,
     display: true,
-    pictureURL:
-      "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1534&q=80",
+    pictureURL: MandoXboxOneImage,
   },
   {
     id: "modelo-ferrari",
@@ -88,19 +92,17 @@ const Items = [
     price: 10,
     stock: 4,
     display: true,
-    pictureURL:
-      "https://images.unsplash.com/photo-1572635196184-84e35138cf62?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1400&q=80",
+    pictureURL: ModeloFerrariImage,
   },
   {
-    id: "airpods",
+    id: "apple-airpods",
     title: "Apple Airpods",
     description: "Los Apple Airpods son auriculares inalambricos.",
     categories: ["tecnologia", "blanco"],
     price: 10,
     stock: 20,
     display: true,
-    pictureURL:
-      "https://images.unsplash.com/photo-1504274066651-8d31a536b11a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=375&q=80",
+    pictureURL: AppleAirpodsImage,
   },
   {
     id: "amazon-echo",
@@ -111,8 +113,7 @@ const Items = [
     price: 10,
     stock: 15,
     display: true,
-    pictureURL:
-      "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1567&q=80",
+    pictureURL: AmazonEchoImage,
   },
 ] as FullItem[];
 

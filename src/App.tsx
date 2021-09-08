@@ -1,9 +1,9 @@
+import { lazy } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { CustomTheme } from "./CustomTheme";
 import { Header } from "./components/Header";
 import { Layout } from "./components/Layout";
-import { CustomTheme } from "./CustomTheme";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { lazy } from "react";
 
 const theme = extendTheme(CustomTheme);
 

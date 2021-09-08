@@ -4,7 +4,13 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+const element = document.getElementById("root")
+
+if (!element) throw new Error("Couldn't find root element to mount the application.");
+
+const root = ReactDOM.createRoot(element)
+
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
