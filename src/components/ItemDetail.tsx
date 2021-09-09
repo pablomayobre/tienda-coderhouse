@@ -15,13 +15,16 @@ import { formatCurrency } from "../api/helpers";
 import { ItemCount } from "./ItemCount";
 import { SuspendedImage } from "./SuspendedImage";
 import { getDefaultVariants, VariantPicker } from "./VariantPicker";
+import { useCart } from "../providers/CartProvider";
 
-export const ItemDetail = ({ id }: { id: string; }) => {
+export const ItemDetail = ({ id }: { id: string }) => {
   const { item } = useItem(id);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [selectedVariants, setVariants] = useState(getDefaultVariants(item));
   const [selectedQuantity, setQuantity] = useState(0);
+
+  const { addToCart } = useCart();
 
   return (
     <Box minHeight="100vh">
@@ -31,20 +34,23 @@ export const ItemDetail = ({ id }: { id: string; }) => {
           alt=""
           ratio={1}
           minWidth="500px"
-          flexGrow={0} />
+          flexGrow={0}
+        />
         <Stack maxWidth="container.sm">
           <Heading as="h2">{item.title}</Heading>
           <Text fontSize="3xl">{formatCurrency(item.price)}</Text>
           <VariantPicker
             variants={item.variants}
             selected={selectedVariants}
-            setSelected={setVariants} />
+            setSelected={setVariants}
+          />
           <ItemCount
             onChange={(s, value) => {
               setQuantity(value);
             }}
             max={item.stock}
-            min={0} />
+            min={0}
+          />
           <Text
             fontSize="sm"
             textAlign="right"
@@ -55,17 +61,13 @@ export const ItemDetail = ({ id }: { id: string; }) => {
           <Button
             disabled={selectedQuantity === 0}
             onClick={() => {
-              const variants = Object.entries(selectedVariants)
-                .map(([name, value]) => {
-                  return `${name}: ${value}`;
-                })
-                .join(", ");
+              addToCart({
+                itemId: item.id,
+                quantity: selectedQuantity,
+                variants: selectedVariants,
+              });
 
-              console.log(
-                `Added to cart: ${selectedQuantity} ${item.title} (${variants})`
-              );
-
-              navigate("/cart")
+              navigate("/cart");
             }}
           >
             Agregar al Carrito
