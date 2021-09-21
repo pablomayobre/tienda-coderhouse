@@ -16,21 +16,19 @@ const fullWidthStyles = {
 };
 
 export const CartWidget = ({ isFullWidth }: CartProps) => {
-  const { list, totalQuantity } = useCart();
-
-  console.log(list, totalQuantity);
+  const { list } = useCart();
 
   return (
     <NavButton icon={MdShoppingCart} isFullWidth={isFullWidth} to="/cart" end>
       Mi Carrito
-      {totalQuantity > 0 ? (
+      {list.length > 0 ? (
         <Badge
           colorScheme="red"
           variant="solid"
           sx={!isFullWidth ? defaultStyles : fullWidthStyles}
           borderRadius={4}
         >
-          {totalQuantity}
+          {list.length}
         </Badge>
       ) : null}
     </NavButton>

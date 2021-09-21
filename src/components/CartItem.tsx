@@ -13,6 +13,8 @@ import { SuspendedImage } from "./SuspendedImage";
 import { CartData, useCart } from "../providers/CartProvider";
 import { GenericVariant } from "../api/types";
 import { formatCurrency } from "../api/helpers";
+import { useEffect } from "react";
+import { useCallbackProp } from "../hooks/useCallbackProp";
 
 const VariantDisplay = ({
   selected,
@@ -34,9 +36,14 @@ const VariantDisplay = ({
   return <Text display="inline-block">{text}</Text>;
 };
 
-export const CartItem = ({ item }: { item: CartData }) => {
+export const CartItem = ({ item, setPrice }: { item: CartData, setPrice: (value: number) => void }) => {
   const { item: details } = useItem(item.itemId);
   const { setQuantity, remove } = useCart();
+  const setItemPrice = useCallbackProp(setPrice)
+
+  useEffect(() => {
+    setItemPrice(item.quantity * details.price)
+  }, [item.quantity, details.price, setItemPrice])
 
   return (
     <Flex
