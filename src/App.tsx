@@ -10,6 +10,7 @@ const theme = extendTheme(CustomTheme);
 
 const ItemListView = lazy(() => import("./views/ItemListView"));
 const ItemDetailView = lazy(() => import("./views/ItemDetailView"));
+const CartView = lazy(() => import("./views/CartView"));
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route path="/" element={<ItemListView />} />
               <Route path="item/:id" element={<ItemDetailView />} />
               <Route path="category/:category" element={<ItemListView />} />
+              <Route path="cart" element={<CartView/>}/>
             </Routes>
           </Layout>
         </BrowserRouter>

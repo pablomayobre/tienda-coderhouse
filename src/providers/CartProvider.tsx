@@ -1,25 +1,27 @@
 import { createContext, useContext, useMemo, useReducer } from "react";
 
-export type PartialCartItem = {
+export type PartialCartData = {
   itemId: string;
   variants: Record<string, string>;
 };
 
-export type CartItem = PartialCartItem & {
+export type CartData = PartialCartData & {
   quantity: number;
 };
 
 export type Cart = {
-  list: CartItem[];
+  list: CartData[];
   totalQuantity: number;
-  addToCart: (item: CartItem) => void;
-  subtractFromCart: (item: CartItem) => void;
-  removeFromCart: (item: PartialCartItem) => void;
-  clearCart: () => void;
-  isInCart: (item: PartialCartItem) => boolean;
+  addQuantity: (item: CartData) => void;
+  subtractQuantity: (item: CartData) => void;
+  setQuantity: (item: CartData) => void;
+  remove: (item: PartialCartData) => void;
+  removeAllWithId: (id: string) => void;
+  clear: () => void;
+  isInCart: (item: PartialCartData) => boolean;
 };
 
-const getItemKey = (item: PartialCartItem): string => {
+export const getItemKey = (item: PartialCartData): string => {
   const variants = Object.entries(item.variants)
     .map(([name, variant]) => `${name}: ${variant}`)
     .sort()
@@ -28,19 +30,21 @@ const getItemKey = (item: PartialCartItem): string => {
 };
 
 type CartAction =
-  | { type: "add"; item: CartItem }
-  | { type: "subtract"; item: CartItem }
-  | { type: "remove"; item: PartialCartItem }
+  | { type: "addQuantity"; item: CartData }
+  | { type: "subtractQuantity"; item: CartData }
+  | { type: "setQuantity"; item: CartData}
+  | { type: "remove"; item: PartialCartData }
+  | { type: "removeAllWithId"; id: string }
   | { type: "clear" };
 
 const CartReducer = (
-  cart: Record<string, CartItem>,
+  cart: Record<string, CartData>,
   action: CartAction
-): Record<string, CartItem> => {
+): Record<string, CartData> => {
   const newCart = { ...cart };
 
   switch (action.type) {
-    case "add": {
+    case "addQuantity": {
       const key = getItemKey(action.item);
       if (newCart[key]) {
         newCart[key].quantity += action.item.quantity ?? 0;
@@ -49,12 +53,19 @@ const CartReducer = (
       }
       return newCart;
     }
-    case "subtract": {
+    case "subtractQuantity": {
       const key = getItemKey(action.item);
       if (newCart[key]) {
         newCart[key].quantity -= action.item.quantity ?? 0;
       }
       return newCart;
+    }
+    case "setQuantity": {
+      const key = getItemKey(action.item);
+      if (newCart[key]) {
+        newCart[key].quantity = action.item.quantity ?? 0;
+      }
+      return newCart
     }
     case "remove": {
       const key = getItemKey(action.item);
@@ -63,6 +74,12 @@ const CartReducer = (
       }
       return newCart;
     }
+    case "removeAllWithId":
+      return Object.fromEntries(
+        Object.entries(newCart).filter(
+          ([name, item]) => item.itemId !== action.id
+        )
+      );
     case "clear":
       return {};
     default:
@@ -75,11 +92,13 @@ const noop = () => {};
 const CartContext = createContext<Cart>({
   list: [],
   totalQuantity: 0,
-  addToCart: noop,
-  subtractFromCart: noop,
-  removeFromCart: noop,
-  clearCart: noop,
   isInCart: () => false,
+  addQuantity: noop,
+  subtractQuantity: noop,
+  setQuantity: noop,
+  remove: noop,
+  removeAllWithId: noop,
+  clear: noop,
 });
 
 export const CartProvider = ({ children }: { children?: React.ReactNode }) => {
@@ -93,29 +112,44 @@ export const CartProvider = ({ children }: { children?: React.ReactNode }) => {
       0
     );
 
-    const isInCart = (item: PartialCartItem) => {
+    const isInCart = (item: PartialCartData) => {
       return Boolean(state[getItemKey(item)]);
     };
 
     return { list, totalQuantity, isInCart };
   }, [state]);
 
-  const { addToCart, subtractFromCart, clearCart, removeFromCart } = useMemo(
+  const {
+    addQuantity,
+    subtractQuantity,
+    setQuantity,
+    remove,
+    removeAllWithId,
+    clear,
+  } = useMemo(
     () => ({
-      addToCart(item: CartItem) {
-        dispatch({ type: "add", item });
+      addQuantity(item: CartData) {
+        dispatch({ type: "addQuantity", item });
       },
 
-      subtractFromCart(item: CartItem) {
-        dispatch({ type: "subtract", item });
+      subtractQuantity(item: CartData) {
+        dispatch({ type: "subtractQuantity", item });
       },
 
-      clearCart() {
-        dispatch({ type: "clear" });
+      setQuantity(item: CartData){
+        dispatch({type: "setQuantity", item})
       },
 
-      removeFromCart(item: PartialCartItem) {
+      remove(item: PartialCartData) {
         dispatch({ type: "remove", item });
+      },
+
+      removeAllWithId(id: string) {
+        dispatch({ type: "removeAllWithId", id });
+      },
+
+      clear() {
+        dispatch({ type: "clear" });
       },
     }),
     [dispatch]
@@ -127,10 +161,12 @@ export const CartProvider = ({ children }: { children?: React.ReactNode }) => {
         list,
         totalQuantity,
         isInCart,
-        addToCart,
-        subtractFromCart,
-        removeFromCart,
-        clearCart,
+        addQuantity,
+        subtractQuantity,
+        setQuantity,
+        remove,
+        removeAllWithId,
+        clear,
       }}
     >
       {children}

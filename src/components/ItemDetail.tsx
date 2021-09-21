@@ -24,7 +24,7 @@ export const ItemDetail = ({ id }: { id: string }) => {
   const [selectedVariants, setVariants] = useState(getDefaultVariants(item));
   const [selectedQuantity, setQuantity] = useState(0);
 
-  const { addToCart } = useCart();
+  const { addQuantity } = useCart();
 
   return (
     <Box minHeight="100vh">
@@ -61,7 +61,7 @@ export const ItemDetail = ({ id }: { id: string }) => {
           <Button
             disabled={selectedQuantity === 0}
             onClick={() => {
-              addToCart({
+              addQuantity({
                 itemId: item.id,
                 quantity: selectedQuantity,
                 variants: selectedVariants,
