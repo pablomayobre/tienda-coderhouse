@@ -1,9 +1,9 @@
-import { Badge } from "@chakra-ui/react";
+import { Badge, Box, Icon, IconButton, Portal } from "@chakra-ui/react";
 import { MdShoppingCart } from "react-icons/md";
 import { useCart } from "../providers/CartProvider";
 import { NavButton } from "./NavButton";
 
-export type CartProps = { isSelected?: boolean; isFullWidth?: boolean };
+export type CartProps = { isFloating?: boolean };
 
 const defaultStyles = {
   top: -1,
@@ -11,26 +11,71 @@ const defaultStyles = {
   position: "absolute",
 };
 
-const fullWidthStyles = {
-  marginLeft: 2,
+const FloatingCartButton = ({
+  items,
+  text,
+}: {
+  items: number;
+  text: string;
+}) => {
+  return (
+    <Portal>
+      <Box position="fixed" right={4} bottom={4}>
+        <IconButton
+          position="relative"
+          right={0}
+          bottom={0}
+          variant="solid"
+          colorScheme="purple"
+          aria-label={text}
+          borderRadius="100%"
+          size="lg"
+          shadow="lg"
+          icon={<Icon as={MdShoppingCart} size={6} />}
+        />
+        {items > 0 ? (
+          <Badge
+            position="absolute"
+            colorScheme="red"
+            variant="solid"
+            top={0}
+            right={0}
+            borderRadius={4}
+          >
+            {items}
+          </Badge>
+        ) : null}
+      </Box>
+    </Portal>
+  );
 };
 
-export const CartWidget = ({ isFullWidth }: CartProps) => {
-  const { list } = useCart();
-
+const NormalCartButton = ({ items, text }: { items: number; text: string }) => {
   return (
-    <NavButton icon={MdShoppingCart} isFullWidth={isFullWidth} to="/cart" end>
-      Mi Carrito
-      {list.length > 0 ? (
+    <NavButton icon={MdShoppingCart} to="/cart" end>
+      {text}
+      {items > 0 ? (
         <Badge
           colorScheme="red"
           variant="solid"
-          sx={!isFullWidth ? defaultStyles : fullWidthStyles}
+          sx={defaultStyles}
           borderRadius={4}
         >
-          {list.length}
+          {items}
         </Badge>
       ) : null}
     </NavButton>
+  );
+};
+
+export const CartWidget = ({ isFloating }: CartProps) => {
+  const { list } = useCart();
+
+  const text = "Mi Carrito";
+
+  return isFloating ? (
+    <FloatingCartButton text={text} items={list.length} />
+  ) : (
+    <NormalCartButton text={text} items={list.length} />
   );
 };

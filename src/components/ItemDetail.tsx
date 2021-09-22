@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { FallbackProps } from "react-error-boundary";
 import { useNavigate } from "react-router";
-import { useItem } from "../api/getItem";
+import { useItem } from "../api";
 import { formatCurrency } from "../api/helpers";
 import { ItemCount } from "./ItemCount";
 import { SuspendedImage } from "./SuspendedImage";
@@ -20,6 +20,8 @@ import { useCart } from "../providers/CartProvider";
 export const ItemDetail = ({ id }: { id: string }) => {
   const { item } = useItem(id);
   const navigate = useNavigate();
+
+  if (!item) throw new Error("Item doesn't exist");
 
   const [selectedVariants, setVariants] = useState(getDefaultVariants(item));
   const [selectedQuantity, setQuantity] = useState(0);

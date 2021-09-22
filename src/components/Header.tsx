@@ -1,8 +1,7 @@
-import { Box, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Flex, Progress, Spacer } from "@chakra-ui/react";
 import { Logo } from "./Logo";
-import { NavBar } from "./NavBar";
 
-export const Header = () => {
+export const Header = ({children, isLoading}: {children?: React.ReactNode, isLoading?: boolean}) => {
   return (
     <Box
       as="header"
@@ -25,8 +24,9 @@ export const Header = () => {
       >
         <Logo />
         <Spacer />
-        <NavBar selected="store" user={{name: "Usuario"}}/>
+        {children}
       </Flex>
+      <Progress size="xs" value={isLoading ? undefined : 0} />
     </Box>
   );
 };

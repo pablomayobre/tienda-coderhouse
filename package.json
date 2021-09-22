@@ -15,6 +15,7 @@
     "@types/node": "^12.20.19",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
+    "firebase": "^9.0.2",
     "framer-motion": "^4.1.17",
     "react": "^18.0.0-alpha-031abd24b-20210907",
     "react-dom": "^18.0.0-alpha-031abd24b-20210907",
@@ -23,6 +24,7 @@
     "react-router": "^6.0.0-beta.3",
     "react-router-dom": "^6.0.0-beta.3",
     "react-scripts": "^5.0.0-next.37",
+    "reactfire": "^4.2.0",
     "swr": "^1.0.0",
     "typescript": "^4.3.5",
     "web-vitals": "^1.1.2"

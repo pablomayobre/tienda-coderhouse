@@ -30,11 +30,10 @@ const links = [
 ];
 
 export type LinkProps = {
-  selected?: string;
   user?: User;
 };
 
-const NavDrawer = ({ selected, user }: LinkProps) => {
+const NavDrawer = ({ user }: LinkProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -96,8 +95,6 @@ const NavDrawer = ({ selected, user }: LinkProps) => {
                 );
               })}
 
-              <CartWidget isFullWidth isSelected={selected === "cart"} />
-
               <Divider
                 marginBottom={2}
                 marginLeft={4}
@@ -129,12 +126,13 @@ const NavDrawer = ({ selected, user }: LinkProps) => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      <CartWidget isFloating />
       {user ? <AccountMenu user={user} /> : null}
     </>
   );
 };
 
-const NavButtons = ({ selected, user }: LinkProps) => {
+const NavButtons = ({ user }: LinkProps) => {
   return (
     <>
       <SearchBar />
@@ -152,7 +150,7 @@ const NavButtons = ({ selected, user }: LinkProps) => {
             </NavButton>
           );
         })}
-        <CartWidget isSelected={selected === "cart"} />
+        <CartWidget />
         <AccountMenu user={user} />
       </Flex>
     </>

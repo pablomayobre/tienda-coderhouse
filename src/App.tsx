@@ -5,6 +5,8 @@ import { CustomTheme } from "./CustomTheme";
 import { Header } from "./components/Header";
 import { Layout } from "./components/Layout";
 import { CartProvider } from "./providers/CartProvider";
+import { ApiProvider } from "./api";
+import { NavBar } from "./components/NavBar";
 
 const theme = extendTheme(CustomTheme);
 
@@ -17,15 +19,20 @@ function App() {
     <ChakraProvider theme={theme}>
       <CartProvider>
         <BrowserRouter>
-          <Header />
-          <Layout>
-            <Routes>
-              <Route path="/" element={<ItemListView />} />
-              <Route path="item/:id" element={<ItemDetailView />} />
-              <Route path="category/:category" element={<ItemListView />} />
-              <Route path="cart" element={<CartView/>}/>
-            </Routes>
-          </Layout>
+          <ApiProvider>
+            <Header>
+              <NavBar user={{ name: "Usuario" }} />
+            </Header>
+
+            <Layout>
+              <Routes>
+                <Route path="/" element={<ItemListView />} />
+                <Route path="item/:id" element={<ItemDetailView />} />
+                <Route path="category/:category" element={<ItemListView />} />
+                <Route path="cart" element={<CartView />} />
+              </Routes>
+            </Layout>
+          </ApiProvider>
         </BrowserRouter>
       </CartProvider>
     </ChakraProvider>

@@ -7,7 +7,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { FallbackProps } from "react-error-boundary";
-import { useItem } from "../api/getItem";
+import { useItem } from "../api";
 import { ItemCount } from "./ItemCount";
 import { SuspendedImage } from "./SuspendedImage";
 import { CartData, useCart } from "../providers/CartProvider";
@@ -38,6 +38,9 @@ const VariantDisplay = ({
 
 export const CartItem = ({ item, setPrice }: { item: CartData, setPrice: (value: number) => void }) => {
   const { item: details } = useItem(item.itemId);
+
+  if (!details) throw new Error("Item doesn't exist");
+
   const { setQuantity, remove } = useCart();
   const setItemPrice = useCallbackProp(setPrice)
 

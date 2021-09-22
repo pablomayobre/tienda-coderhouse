@@ -5,6 +5,7 @@ import {
   Skeleton,
   Heading,
   Text,
+  Center,
 } from "@chakra-ui/react";
 import { formatCurrency } from "../api/helpers";
 import { ItemData } from "../api/types";
@@ -13,7 +14,8 @@ import { Link } from "react-router-dom";
 
 export const Item = ({ item }: { item: ItemData }) => {
   return (
-    <LinkBox bg="white" borderRadius={6} shadow="xs" overflow="hidden">
+    <Center >
+    <LinkBox width="100%" bg="white" borderRadius={6} shadow="xs" overflow="hidden" maxWidth={[null, null, 250]} justifyItems="center">
       <SuspendedImage src={item.pictureURL} alt="" ratio={1} />
       <Box paddingLeft={4} paddingRight={4} paddingTop={2} paddingBottom={4}>
         <Text fontSize="3xl">{formatCurrency(item.price)}</Text>
@@ -24,6 +26,7 @@ export const Item = ({ item }: { item: ItemData }) => {
         </Heading>
       </Box>
     </LinkBox>
+    </Center>
   );
 };
 
