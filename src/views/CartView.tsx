@@ -2,7 +2,6 @@ import { Stack, Box, Heading, Text, Button } from "@chakra-ui/react";
 import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Link } from "react-router-dom";
-import { useRefetchItem } from "../api/getItem";
 import { formatCurrency } from "../api/helpers";
 import {
   CartItem,
@@ -18,10 +17,8 @@ const SuspendedCartItem = ({
   item: CartData;
   setPrice: (value: number) => void;
 }) => {
-  const refetch = useRefetchItem(item.itemId);
-
   return (
-    <ErrorBoundary FallbackComponent={CartItemError} onReset={refetch}>
+    <ErrorBoundary FallbackComponent={CartItemError}>
       <Suspense fallback={<CartItemSuspense />}>
         <CartItem item={item} setPrice={setPrice} />
       </Suspense>
