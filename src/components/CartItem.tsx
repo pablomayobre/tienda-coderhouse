@@ -7,7 +7,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { FallbackProps } from "react-error-boundary";
-import { useItem } from "../api";
+import { useItem } from "../api/useItem";
 import { ItemCount } from "./ItemCount";
 import { SuspendedImage } from "./SuspendedImage";
 import { CartData, useCart } from "../providers/CartProvider";

@@ -1,6 +1,6 @@
 import { Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { FallbackProps } from "react-error-boundary";
-import { useItems } from "../api";
+import { useItems } from "../api/useItems";
 import { Item, ItemSkeleton } from "./Item";
 
 export const ItemListError = ({ resetErrorBoundary }: FallbackProps) => {
