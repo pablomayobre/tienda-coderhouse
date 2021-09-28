@@ -1,4 +1,10 @@
-import { createContext, useContext, useMemo, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 
 export type PartialCartData = {
   itemId: string;
@@ -32,7 +38,7 @@ export const getItemKey = (item: PartialCartData): string => {
 type CartAction =
   | { type: "addQuantity"; item: CartData }
   | { type: "subtractQuantity"; item: CartData }
-  | { type: "setQuantity"; item: CartData}
+  | { type: "setQuantity"; item: CartData }
   | { type: "remove"; item: PartialCartData }
   | { type: "removeAllWithId"; id: string }
   | { type: "clear" };
@@ -65,7 +71,7 @@ const CartReducer = (
       if (newCart[key]) {
         newCart[key].quantity = action.item.quantity ?? 0;
       }
-      return newCart
+      return newCart;
     }
     case "remove": {
       const key = getItemKey(action.item);
@@ -101,8 +107,29 @@ const CartContext = createContext<Cart>({
   clear: noop,
 });
 
+const LOCALSTORAGE_CART_DATA = "cartData";
+
 export const CartProvider = ({ children }: { children?: React.ReactNode }) => {
-  const [state, dispatch] = useReducer(CartReducer, {});
+  const [state, dispatch] = useReducer(
+    CartReducer,
+    {},
+    (initial): Record<string, CartData> => {
+      try {
+        // Get from local storage by key
+        const item = window.localStorage.getItem(LOCALSTORAGE_CART_DATA);
+        // Parse stored json or if none return initialValue
+        return item ? (JSON.parse(item) as Record<string, CartData>) : initial;
+      } catch (error) {
+        // If error also return initialValue
+        console.log(error);
+        return initial;
+      }
+    }
+  );
+
+  useEffect(() => {
+    window.localStorage.setItem(LOCALSTORAGE_CART_DATA, JSON.stringify(state));
+  }, [state]);
 
   const { list, totalQuantity, isInCart } = useMemo(() => {
     const list = Object.values(state);
@@ -136,8 +163,8 @@ export const CartProvider = ({ children }: { children?: React.ReactNode }) => {
         dispatch({ type: "subtractQuantity", item });
       },
 
-      setQuantity(item: CartData){
-        dispatch({type: "setQuantity", item})
+      setQuantity(item: CartData) {
+        dispatch({ type: "setQuantity", item });
       },
 
       remove(item: PartialCartData) {

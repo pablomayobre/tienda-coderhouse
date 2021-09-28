@@ -1,30 +1,12 @@
 import { Stack, Box, Heading, Text, Button } from "@chakra-ui/react";
-import { Suspense, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../api/helpers";
 import {
-  CartItem,
-  CartItemError,
-  CartItemSuspense,
+  SuspendedCartItem,
 } from "../components/CartItem";
+import { OrderDetailsModal } from "../components/OrderDetailsModal";
 import { CartData, getItemKey, useCart } from "../providers/CartProvider";
-
-const SuspendedCartItem = ({
-  item,
-  setPrice,
-}: {
-  item: CartData;
-  setPrice: (value: number) => void;
-}) => {
-  return (
-    <ErrorBoundary FallbackComponent={CartItemError}>
-      <Suspense fallback={<CartItemSuspense />}>
-        <CartItem item={item} setPrice={setPrice} />
-      </Suspense>
-    </ErrorBoundary>
-  );
-};
 
 const CartList = ({ list }: { list: CartData[] }) => {
   const [price, setPrice] = useState(list.map(() => 0));
@@ -44,15 +26,18 @@ const CartList = ({ list }: { list: CartData[] }) => {
           }
         />
       ))}
-      <Text
-        fontSize="3xl"
-        maxWidth="container.md"
-        width="100%"
-        paddingRight={8}
-        textAlign="right"
-      >
-        Total: {formatCurrency(price.reduce((a, b) => a + b))}
-      </Text>
+      <Stack>
+        <Text
+          fontSize="3xl"
+          maxWidth="container.md"
+          width="100%"
+          paddingRight={8}
+          textAlign="center"
+        >
+          Total: {formatCurrency(price.reduce((a, b) => a + b))}
+        </Text>
+        <OrderDetailsModal />
+      </Stack>
     </>
   );
 };
