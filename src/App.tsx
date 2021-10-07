@@ -22,7 +22,7 @@ function App() {
         <BrowserRouter>
           <ApiProvider>
             <Header>
-              <NavBar user={{ name: "Usuario" }} />
+              <NavBar />
             </Header>
 
             <Layout>

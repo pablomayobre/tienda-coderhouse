@@ -1,11 +1,14 @@
+import { Suspense } from "react";
+import { getAuth } from "firebase/auth";
 import {
   enableIndexedDbPersistence,
   initializeFirestore,
 } from "firebase/firestore";
-import { Suspense } from "react";
 import {
+  AuthProvider,
   FirebaseAppProvider,
   FirestoreProvider,
+  useFirebaseApp,
   useInitFirestore,
 } from "reactfire";
 import { PageSkeleton } from "../components/PageSkeleton";
@@ -17,7 +20,7 @@ const Firestore = ({ children }: { children?: React.ReactNode }) => {
     try {
       await enableIndexedDbPersistence(db);
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
     return db;
   });
@@ -27,11 +30,20 @@ const Firestore = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
+const Authentication = ({ children }: { children?: React.ReactNode }) => {
+  const app = useFirebaseApp();
+  const auth = getAuth(app);
+
+  return <AuthProvider sdk={auth}>{children}</AuthProvider>;
+};
+
 export const ApiProvider = ({ children }: { children?: React.ReactNode }) => {
   return (
     <Suspense fallback={<PageSkeleton />}>
       <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={true}>
-        <Firestore>{children}</Firestore>
+        <Authentication>
+          <Firestore>{children}</Firestore>
+        </Authentication>
       </FirebaseAppProvider>
     </Suspense>
   );

@@ -22,18 +22,24 @@ import { FaInstagram } from "react-icons/fa";
 import { SearchBar } from "./SearchBar";
 import { Logo } from "./Logo";
 import { NavButton } from "./NavButton";
-import { AccountMenu, User } from "./AccountMenu";
+import { Account, LogInButton } from "./AccountMenu";
 import { CartWidget } from "./CartWidget";
 
 const links = [
-  { key: "store", text: "Tienda", link: "/", end: true, icon: MdStore } as const,
+  {
+    key: "store",
+    text: "Tienda",
+    link: "/",
+    end: true,
+    icon: MdStore,
+  } as const,
 ];
 
 export type LinkProps = {
-  user?: User;
+  isDisabled?: boolean;
 };
 
-const NavDrawer = ({ user }: LinkProps) => {
+const NavDrawer = ({ isDisabled }: LinkProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -102,7 +108,7 @@ const NavDrawer = ({ user }: LinkProps) => {
                 w="initial"
               />
 
-              {!user ? <AccountMenu isFullWidth /> : null}
+              {isDisabled ? null : <LogInButton isFullWidth />}
             </Flex>
           </DrawerBody>
 
@@ -127,12 +133,12 @@ const NavDrawer = ({ user }: LinkProps) => {
         </DrawerContent>
       </Drawer>
       <CartWidget isFloating />
-      {user ? <AccountMenu user={user} /> : null}
+      {isDisabled ? null : <Account />}
     </>
   );
 };
 
-const NavButtons = ({ user }: LinkProps) => {
+const NavButtons = ({ isDisabled }: LinkProps) => {
   return (
     <>
       <SearchBar />
@@ -151,7 +157,12 @@ const NavButtons = ({ user }: LinkProps) => {
           );
         })}
         <CartWidget />
-        <AccountMenu user={user} />
+        {isDisabled ? null : (
+          <>
+            <LogInButton />
+            <Account />
+          </>
+        )}
       </Flex>
     </>
   );

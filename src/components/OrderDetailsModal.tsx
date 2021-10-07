@@ -50,7 +50,7 @@ export const OrderDetailsModal = () => {
       >
         {(props) => (
           <Form>
-            <Heading>Datos del Comprador</Heading>
+            <Heading textAlign="center">Datos del Comprador</Heading>
 
             <Stack direction="column" maxWidth="container.md">
               <Field name="name">

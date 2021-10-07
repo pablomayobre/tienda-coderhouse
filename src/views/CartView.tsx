@@ -26,7 +26,7 @@ const CartList = ({ list }: { list: CartData[] }) => {
           }
         />
       ))}
-      <Stack>
+      <Stack width="100%" alignItems="center">
         <Text
           fontSize="3xl"
           maxWidth="container.md"
