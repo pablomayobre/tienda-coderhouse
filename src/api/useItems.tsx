@@ -1,13 +1,6 @@
-import {
-  collection, query,
-  where, QueryConstraint
-} from "firebase/firestore";
-import {
-  useFirestore,
-  useFirestoreCollectionData
-} from "reactfire";
+import { collection, query, where, QueryConstraint } from "firebase/firestore";
+import { useFirestore, useFirestoreCollectionData } from "reactfire";
 import { FullItem } from "./types";
-
 
 export const useItems = (
   category?: string,
@@ -15,29 +8,34 @@ export const useItems = (
 ) => {
   const firestore = useFirestore();
 
-  let condition: QueryConstraint;
+  let condition: QueryConstraint[];
 
   switch (category) {
     case "all":
     case undefined:
-      condition = where("id", "!=", null);
+      condition = [];
       break;
     case "other":
-      condition = where("categories", "==", []);
+      condition = [where("categories", "==", [])];
       break;
     default:
-      console.log(category);
-      condition = where("categories", "array-contains", category);
+      condition = [where("categories", "array-contains", category)];
       break;
   }
 
   const itemsCollection = collection(firestore, "items");
 
   const { data } = useFirestoreCollectionData(
-    query(itemsCollection, condition, ...(otherConstraints ?? []))
+    query(
+      itemsCollection,
+      where("display", "!=", false),
+      ...condition,
+      ...(otherConstraints ?? [])
+    ),
+    { idField: "uid" }
   );
 
-  console.log(data);
-
-  return { items: (data ?? []) as FullItem[] };
+  return {
+    items: (data ?? []) as FullItem[],
+  };
 };

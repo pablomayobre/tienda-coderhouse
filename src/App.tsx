@@ -14,6 +14,7 @@ const ItemListView = lazy(() => import("./views/ItemListView"));
 const ItemDetailView = lazy(() => import("./views/ItemDetailView"));
 const CartView = lazy(() => import("./views/CartView"));
 const OrderView = lazy(() => import("./views/OrderView"));
+const UserOrders = lazy(() => import("./views/UserOrders"))
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                 <Route path="category/:category" element={<ItemListView />} />
                 <Route path="cart" element={<CartView />} />
                 <Route path="order/:id" element={<OrderView/>}/>
+                <Route path="user/orders" element={<UserOrders/>}/>
               </Routes>
             </Layout>
           </ApiProvider>

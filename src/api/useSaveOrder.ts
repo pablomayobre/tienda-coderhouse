@@ -1,6 +1,6 @@
 import { addDoc, collection, doc, getDoc } from "@firebase/firestore";
 import { useCallback } from "react";
-import { useFirestore } from "reactfire";
+import { useFirestore, useUser } from "reactfire";
 import { Buyer } from "../components/OrderDetailsModal";
 import { CartData } from "../providers/CartProvider";
 
@@ -15,27 +15,31 @@ export const useSaveOrder = () => {
   const firestore = useFirestore();
   const orders = collection(firestore, "orders")
 
-  return useCallback(async (items: CartData[], buyer: Buyer) => {
-    const itemsIds = new Set(items.map(({itemId}) => itemId))
+  const {data: user} = useUser();
 
-    const prices: Record<string, number|undefined> = Object.fromEntries(await Promise.all(Array.from(itemsIds.values()).map(async (id) => {
+  return useCallback(async (items: CartData[], buyer: Buyer) => {
+    const itemsIds = new Set(items.map(({uniqueId}) => uniqueId))
+
+    const prices: Record<string, number|null> = Object.fromEntries(await Promise.all(Array.from(itemsIds.values()).map(async (id) => {
       try {
-      const item = await getDoc(doc(firestore, "items", id))
-      return [id, item.data()?.price ?? null as number|null] as const
+        const document = await getDoc(doc(firestore, "items", id))
+        const item = document.data();
+        return [id, (item?.price ? item.price * (1 - (item.discount ?? 0)): null)] as const
       } catch (e){
         return [id, null] as const
       }
     })))
 
-    const itemsWithPrice = items.map((item) => ({...item, price: prices[item.itemId]}))
+    const itemsWithPrice = items.map((item) => ({...item, price: prices[item.uniqueId]}))
 
     const order = await addDoc(orders, {
       items: itemsWithPrice,
       buyer,
-      total: itemsWithPrice.reduce((a, b) => (a + (b.price ?? 0)), 0 as number),
+      user: user?.uid ?? null,
+      total: itemsWithPrice.reduce((a, b) => (a + (b.price ?? 0) * b.quantity), 0 as number),
       date: new Date().toISOString()
     } as FullOrder)
 
     return order.id
-  }, [orders, firestore])
+  }, [orders, firestore, user])
 }

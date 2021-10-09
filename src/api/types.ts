@@ -28,4 +28,5 @@ export interface FullItem extends ItemData {
   readonly display?: boolean;
   readonly stock: number;
   variants?: Readonly<Record<string, GenericVariant>>
+  readonly uid: string;
 }

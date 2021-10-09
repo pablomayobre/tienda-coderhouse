@@ -12,6 +12,7 @@ export type PartialCartData = {
 };
 
 export type CartData = PartialCartData & {
+  uniqueId: string;
   quantity: number;
 };
 

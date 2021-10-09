@@ -65,6 +65,7 @@ export const ItemDetail = ({ id }: { id: string }) => {
             onClick={() => {
               addQuantity({
                 itemId: item.id,
+                uniqueId: item.uid,
                 quantity: selectedQuantity,
                 variants: selectedVariants,
               });

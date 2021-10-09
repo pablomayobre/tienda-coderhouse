@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { useOrder } from "../api/useOrder";
 import { Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import { SuspendedCartItem } from "../components/CartItem";
+import { SuspendedOrderItem } from "../components/OrderItem";
 import { getItemKey } from "../providers/CartProvider";
 
 const OrderviewFallback = () => {
@@ -56,7 +56,7 @@ const OrderView = () => {
       </Center>
       <Stack direction="column" alignItems="center">
         {order.items.map((item, index) => (
-          <SuspendedCartItem key={getItemKey(item)} item={item} />
+          <SuspendedOrderItem key={getItemKey(item)} item={item} />
         ))}
       </Stack>
     </>

@@ -38,8 +38,6 @@ export const OrderDetailsModal = () => {
       <Formik
         initialValues={{ name: "", phone: "", email: "" }}
         onSubmit={(values: Buyer, actions) => {
-          console.log(list);
-          console.log(values);
 
           submit(list, values).then((id) => {
             actions.setSubmitting(false);

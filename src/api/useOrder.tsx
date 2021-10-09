@@ -9,7 +9,7 @@ export const useOrder = (id: string) => {
   const firestore = useFirestore();
   const item = doc(firestore, "orders", id);
 
-  const data = useFirestoreDocData(item);
+  const {data: order} = useFirestoreDocData(item);
 
-  return { order: (data.data as FullOrder | undefined) ?? null };
+  return { order: order ?? null } as {order: FullOrder|null};
 };
