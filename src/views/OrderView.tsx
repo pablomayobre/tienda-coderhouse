@@ -32,19 +32,19 @@ const OrderView = () => {
       width="100%"
     >
         <Text>
-          <Text fontWeight="bold" display="inline">
+          <Text as="span" fontWeight="bold" display="inline">
             Comprador:
           </Text>{" "}
           {order.buyer.name}
         </Text>
         <Text>
-          <Text fontWeight="bold" display="inline">
+          <Text as="span" fontWeight="bold" display="inline">
             Número de Telefono:
           </Text>{" "}
           {order.buyer.phone}
         </Text>
         <Text>
-          <Text fontWeight="bold" display="inline">
+          <Text as="span" fontWeight="bold" display="inline">
             E-mail:
           </Text>{" "}
           {order.buyer.email}
@@ -55,7 +55,7 @@ const OrderView = () => {
         <Heading>Items</Heading>
       </Center>
       <Stack direction="column" alignItems="center">
-        {order.items.map((item, index) => (
+        {order.items.map((item) => (
           <SuspendedOrderItem key={getItemKey(item)} item={item} />
         ))}
       </Stack>
