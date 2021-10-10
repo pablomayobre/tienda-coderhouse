@@ -4,13 +4,19 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-  Flex,
-  Heading,
   Stack,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
 import { PersistFormikValues } from "formik-persist-values";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSaveOrder } from "../api/useSaveOrder";
 import { useCart } from "../providers/CartProvider";
 
@@ -20,95 +26,109 @@ export type Buyer = {
   email: string;
 };
 
-export const OrderDetailsModal = () => {
+const OrderForm = ({ id }: { id: string }) => {
   const { list, clear } = useCart();
   const submit = useSaveOrder();
   const navigate = useNavigate();
 
   return (
-    <Stack
-      padding={8}
-      gridGap={3}
-      bg="white"
-      borderRadius="lg"
-      shadow="xs"
-      maxWidth="container.md"
-      width="100%"
+    <Formik
+      initialValues={{ name: "", phone: "", email: "" }}
+      onSubmit={(values: Buyer, actions) => {
+        submit(list, values).then((id) => {
+          actions.setSubmitting(false);
+          clear();
+          navigate(`/order/${id}`, { replace: true });
+        });
+      }}
     >
-      <Formik
-        initialValues={{ name: "", phone: "", email: "" }}
-        onSubmit={(values: Buyer, actions) => {
+      {(props) => (
+        <Form id={id}>
+          <Stack direction="column" maxWidth="container.md">
+            <Field name="name">
+              {({ field, form }: FieldProps<string, Buyer>) => (
+                <FormControl
+                  isInvalid={!!(form.errors.name && form.touched.name)}
+                >
+                  <FormLabel htmlFor="name">Nombre</FormLabel>
+                  <Input {...field} id="name" placeholder="name" />
+                  <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
 
-          submit(list, values).then((id) => {
-            actions.setSubmitting(false);
-            clear();
-            navigate(`/order/${id}`, { replace: true });
-          });
-        }}
-      >
-        {(props) => (
-          <Form>
-            <Heading textAlign="center">Datos del Comprador</Heading>
+            <Field name="phone">
+              {({ field, form }: FieldProps<string, Buyer>) => (
+                <FormControl
+                  isInvalid={!!(form.errors.phone && form.touched.phone)}
+                >
+                  <FormLabel htmlFor="phone">Número de teléfono</FormLabel>
+                  <Input
+                    {...field}
+                    type="tel"
+                    id="phone"
+                    placeholder="+00 0000 0000"
+                  />
+                  <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
 
-            <Stack direction="column" maxWidth="container.md">
-              <Field name="name">
-                {({ field, form }: FieldProps<string, Buyer>) => (
-                  <FormControl
-                    isInvalid={!!(form.errors.name && form.touched.name)}
-                  >
-                    <FormLabel htmlFor="name">Nombre</FormLabel>
-                    <Input {...field} id="name" placeholder="name" />
-                    <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
+            <Field name="email">
+              {({ field, form }: FieldProps<string, Buyer>) => (
+                <FormControl
+                  isInvalid={!!(form.errors.email && form.touched.email)}
+                >
+                  <FormLabel htmlFor="email">E-mail</FormLabel>
+                  <Input
+                    {...field}
+                    type="email"
+                    id="email"
+                    placeholder="mail@example.com"
+                  />
+                  <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+            <PersistFormikValues name="buyerData" />
+          </Stack>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
-              <Field name="phone">
-                {({ field, form }: FieldProps<string, Buyer>) => (
-                  <FormControl
-                    isInvalid={!!(form.errors.phone && form.touched.phone)}
-                  >
-                    <FormLabel htmlFor="phone">Número de teléfono</FormLabel>
-                    <Input
-                      {...field}
-                      type="tel"
-                      id="phone"
-                      placeholder="+00 0000 0000"
-                    />
-                    <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
+export const OrderDetailsModal = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-              <Field name="email">
-                {({ field, form }: FieldProps<string, Buyer>) => (
-                  <FormControl
-                    isInvalid={!!(form.errors.email && form.touched.email)}
-                  >
-                    <FormLabel htmlFor="email">E-mail</FormLabel>
-                    <Input
-                      {...field}
-                      type="email"
-                      id="email"
-                      placeholder="mail@example.com"
-                    />
-                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
-              <PersistFormikValues name="buyerData" />
-            </Stack>
-            <Flex gridGap={2} justifyContent="flex-end">
-              <Button as={Link} to="/cart">
-                Volver al Carrito
-              </Button>
-              <Button isLoading={props.isSubmitting} type="submit">
+  return (
+    <>
+      <Button variant="solid" colorScheme="purple" onClick={onOpen}>
+        Comprar
+      </Button>
+      {isOpen ? (
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Datos del Comprador</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <OrderForm id="order-details" />
+            </ModalBody>
+            <ModalFooter display="flex" gridGap={2} alignItems="flex-end">
+              <Button onClick={onClose}>Volver al Carrito</Button>
+              <Button
+                form="order-details"
+                type="submit"
+                variant="solid"
+                colorScheme="purple"
+              >
                 Finalizar Compra
               </Button>
-            </Flex>
-          </Form>
-        )}
-      </Formik>
-    </Stack>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      ) : null}
+    </>
   );
 };

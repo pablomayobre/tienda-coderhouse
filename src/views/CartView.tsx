@@ -2,9 +2,7 @@ import { Stack, Box, Heading, Text, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../api/helpers";
-import {
-  SuspendedCartItem,
-} from "../components/CartItem";
+import { SuspendedCartItem } from "../components/CartItem";
 import { OrderDetailsModal } from "../components/OrderDetailsModal";
 import { CartData, getItemKey, useCart } from "../providers/CartProvider";
 
@@ -26,14 +24,8 @@ const CartList = ({ list }: { list: CartData[] }) => {
           }
         />
       ))}
-      <Stack width="100%" alignItems="center">
-        <Text
-          fontSize="3xl"
-          maxWidth="container.md"
-          width="100%"
-          paddingRight={8}
-          textAlign="center"
-        >
+      <Stack width="100%" alignItems="flex-end" maxWidth="container.md" paddingRight={8}>
+        <Text fontSize="3xl" width="100%" textAlign="right">
           Total: {formatCurrency(price.reduce((a, b) => a + b))}
         </Text>
         <OrderDetailsModal />
