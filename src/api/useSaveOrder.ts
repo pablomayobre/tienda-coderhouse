@@ -1,45 +1,108 @@
-import { addDoc, collection, doc, getDoc } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  DocumentReference,
+  DocumentSnapshot,
+  getDoc,
+  updateDoc,
+} from "@firebase/firestore";
 import { useCallback } from "react";
 import { useFirestore, useUser } from "reactfire";
 import { Buyer } from "../components/OrderDetailsModal";
 import { CartData } from "../providers/CartProvider";
+import { FullItem } from "./types";
 
 export type FullOrder = {
-  items: (CartData & {price: number|null})[],
-  total: number,
-  buyer: Buyer,
-  date: string
-}
+  items: (CartData & { price: number | null })[];
+  total: number;
+  buyer: Buyer;
+  date: string;
+};
+
+type ItemDocument = {
+  snapshot: DocumentSnapshot<FullItem>;
+  quantity: number;
+};
 
 export const useSaveOrder = () => {
   const firestore = useFirestore();
-  const orders = collection(firestore, "orders")
+  const orders = collection(firestore, "orders");
 
-  const {data: user} = useUser();
+  const { data: user } = useUser();
 
-  return useCallback(async (items: CartData[], buyer: Buyer) => {
-    const itemsIds = new Set(items.map(({uniqueId}) => uniqueId))
+  return useCallback(
+    async (items: CartData[], buyer: Buyer) => {
+      const itemsIds = new Set(items.map(({ uniqueId }) => uniqueId));
 
-    const prices: Record<string, number|null> = Object.fromEntries(await Promise.all(Array.from(itemsIds.values()).map(async (id) => {
-      try {
-        const document = await getDoc(doc(firestore, "items", id))
-        const item = document.data();
-        return [id, (item?.price ? item.price * (1 - (item.discount ?? 0)): null)] as const
-      } catch (e){
-        return [id, null] as const
-      }
-    })))
+      const documents: Map<string, ItemDocument | null> = new Map(
+        await Promise.all(
+          Array.from(itemsIds.values()).map(async (uniqueId) => {
+            try {
+              const snapshot = await getDoc(
+                doc(firestore, "items", uniqueId) as DocumentReference<FullItem>
+              );
+              return [uniqueId, { snapshot, quantity: 0 }] as [
+                string,
+                ItemDocument
+              ];
+            } catch (e) {
+              return [uniqueId, null] as [string, null];
+            }
+          })
+        )
+      );
 
-    const itemsWithPrice = items.map((item) => ({...item, price: prices[item.uniqueId]}))
+      const itemsWithPrice = items.map((item) => {
+        const document = documents.get(item.uniqueId);
 
-    const order = await addDoc(orders, {
-      items: itemsWithPrice,
-      buyer,
-      user: user?.uid ?? null,
-      total: itemsWithPrice.reduce((a, b) => (a + (b.price ?? 0) * b.quantity), 0 as number),
-      date: new Date().toISOString()
-    } as FullOrder)
+        if (!document || !document.snapshot.exists())
+          return { ...item, price: null };
 
-    return order.id
-  }, [orders, firestore, user])
-}
+        const { price, discount = 0 } = document.snapshot.data();
+
+        document.quantity += item.quantity;
+
+        return {
+          ...item,
+          price: price * (1 - discount),
+        };
+      });
+
+      await Promise.all(
+        Array.from(documents.values()).map(async (value) => {
+          if (!value) return;
+
+          const { snapshot, quantity } = value;
+
+          if (!snapshot.exists()) return;
+
+          try {
+            const stock = Math.max(0, snapshot.data().stock - quantity);
+
+            updateDoc(snapshot.ref, {
+              stock,
+              display: stock !== 0,
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        })
+      );
+
+      const order = await addDoc(orders, {
+        items: itemsWithPrice,
+        buyer,
+        user: user?.uid ?? null,
+        total: itemsWithPrice.reduce(
+          (a, b) => a + (b.price ?? 0) * b.quantity,
+          0 as number
+        ),
+        date: new Date().toISOString(),
+      } as FullOrder);
+
+      return order.id;
+    },
+    [orders, firestore, user]
+  );
+};

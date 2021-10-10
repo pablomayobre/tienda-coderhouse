@@ -19,13 +19,14 @@ export type CartData = PartialCartData & {
 export type Cart = {
   list: CartData[];
   totalQuantity: number;
+  getItemQuantity: (id: string) => number;
+  isInCart: (item: PartialCartData) => boolean;
   addQuantity: (item: CartData) => void;
   subtractQuantity: (item: CartData) => void;
   setQuantity: (item: CartData) => void;
   remove: (item: PartialCartData) => void;
   removeAllWithId: (id: string) => void;
   clear: () => void;
-  isInCart: (item: PartialCartData) => boolean;
 };
 
 export const getItemKey = (item: PartialCartData): string => {
@@ -99,6 +100,7 @@ const noop = () => {};
 const CartContext = createContext<Cart>({
   list: [],
   totalQuantity: 0,
+  getItemQuantity: () => 0,
   isInCart: () => false,
   addQuantity: noop,
   subtractQuantity: noop,
@@ -132,7 +134,7 @@ export const CartProvider = ({ children }: { children?: React.ReactNode }) => {
     window.localStorage.setItem(LOCALSTORAGE_CART_DATA, JSON.stringify(state));
   }, [state]);
 
-  const { list, totalQuantity, isInCart } = useMemo(() => {
+  const { list, totalQuantity, isInCart, getItemQuantity } = useMemo(() => {
     const list = Object.values(state);
 
     const totalQuantity = list.reduce(
@@ -140,11 +142,15 @@ export const CartProvider = ({ children }: { children?: React.ReactNode }) => {
       0
     );
 
+    const getItemQuantity = (id: string) => {
+      return list.filter(({itemId}) => itemId === id).reduce((total, {quantity}) => total + quantity, 0)
+    }
+
     const isInCart = (item: PartialCartData) => {
       return Boolean(state[getItemKey(item)]);
     };
 
-    return { list, totalQuantity, isInCart };
+    return { list, totalQuantity, isInCart, getItemQuantity };
   }, [state]);
 
   const {
@@ -188,6 +194,7 @@ export const CartProvider = ({ children }: { children?: React.ReactNode }) => {
       value={{
         list,
         totalQuantity,
+        getItemQuantity,
         isInCart,
         addQuantity,
         subtractQuantity,

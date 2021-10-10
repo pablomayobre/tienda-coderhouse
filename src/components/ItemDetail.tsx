@@ -26,7 +26,9 @@ export const ItemDetail = ({ id }: { id: string }) => {
   const [selectedVariants, setVariants] = useState(getDefaultVariants(item));
   const [selectedQuantity, setQuantity] = useState(0);
 
-  const { addQuantity } = useCart();
+  const { addQuantity, getItemQuantity } = useCart();
+
+  const cartQuantity = getItemQuantity(id)
 
   return (
     <Box minHeight="100vh">
@@ -50,7 +52,7 @@ export const ItemDetail = ({ id }: { id: string }) => {
             onChange={(s, value) => {
               setQuantity(value);
             }}
-            max={item.stock}
+            max={item.stock - cartQuantity}
             min={0}
           />
           <Text
