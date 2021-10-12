@@ -1,4 +1,5 @@
-import { MdAccountCircle, MdShoppingBasket, MdSettings } from "react-icons/md";
+import { MdShoppingBasket, MdSettings, MdLogout } from "react-icons/md";
+import { FaGoogle } from "react-icons/fa";
 import {
   Text,
   Icon,
@@ -19,11 +20,16 @@ import { useAvatar } from "../api/useAvatar";
 const AccountMenu = () => {
   const signOut = useSignOut();
   const { data: user } = useUser();
-  const avatar = useAvatar()
+  const avatar = useAvatar();
 
   return (
     <Menu gutter={16}>
-      <MenuButton as={Avatar} src={avatar} cursor="pointer" size="md"></MenuButton>
+      <MenuButton
+        as={Avatar}
+        src={avatar}
+        cursor="pointer"
+        size="md"
+      ></MenuButton>
       <MenuList>
         <Text padding="0.4rem 0.8rem">
           Sesión iniciada como <strong>{(user as User).displayName}</strong>
@@ -46,7 +52,12 @@ const AccountMenu = () => {
           Configuración
         </MenuItem>
         <MenuDivider />
-        <MenuItem onClick={() => signOut()}>Cerrar Sesión</MenuItem>
+        <MenuItem
+          icon={<Icon as={MdLogout} size={5} />}
+          onClick={() => signOut()}
+        >
+          Cerrar Sesión
+        </MenuItem>
       </MenuList>
     </Menu>
   );
@@ -67,7 +78,7 @@ export const LogInButton = ({ isFullWidth }: { isFullWidth?: boolean }) => {
             }
           : undefined
       }
-      leftIcon={<Icon as={MdAccountCircle} size={5} />}
+      leftIcon={<Icon as={FaGoogle} size={5} />}
       iconSpacing={1}
       position="relative"
       colorScheme="purple"
@@ -81,5 +92,5 @@ export const LogInButton = ({ isFullWidth }: { isFullWidth?: boolean }) => {
 
 export const Account = () => {
   const isSignedIn = useIsSignedIn();
-  return isSignedIn ? <AccountMenu/> : null;
+  return isSignedIn ? <AccountMenu /> : null;
 };
