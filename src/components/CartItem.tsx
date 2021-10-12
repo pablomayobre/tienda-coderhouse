@@ -1,13 +1,23 @@
-import { Button, Heading, Skeleton, Stack, Text, Flex } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Skeleton,
+  Stack,
+  Text,
+  Flex,
+  LinkOverlay,
+  LinkBox,
+} from "@chakra-ui/react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useItem } from "../api/useItem";
 import { ItemCount } from "./ItemCount";
-import { SuspendedImage } from "./SuspendedImage";
+import { AspectRatioImage } from "./SuspendedImage";
 import { CartData, useCart } from "../providers/CartProvider";
 import { GenericVariant } from "../api/types";
 import { formatCurrency } from "../api/helpers";
 import { Suspense, useEffect } from "react";
 import { useCallbackProp } from "../hooks/useCallbackProp";
+import { Link } from "react-router-dom";
 
 const VariantDisplay = ({
   selected,
@@ -26,7 +36,18 @@ const VariantDisplay = ({
     })
     .join(", ");
 
-  return <Text display="inline-block">{text}</Text>;
+  return (
+    <Text
+      flexShrink={2}
+      whiteSpace="nowrap"
+      textOverflow="ellipsis"
+      overflow="hidden"
+      width="100%"
+      display="block"
+    >
+      {text}
+    </Text>
+  );
 };
 
 export type CartItemProps = {
@@ -48,33 +69,57 @@ export const CartItem = ({ item, setPrice }: CartItemProps) => {
 
   return (
     <Flex
-      direction={{ base: "column", sm: "row" }}
-      padding={4}
-      paddingLeft={4}
-      paddingRight={8}
-      gridGap={3}
+      direction={{ base: "column", md: "row" }}
       bg="white"
       borderRadius="lg"
       shadow="xs"
-      maxWidth="container.md"
+      maxWidth={{ base: 250, md: "container.md" }}
+      margin="0 auto"
       width="100%"
+      justifyContent="space-between"
     >
-      <SuspendedImage
-        src={details.pictureURL}
-        alt=""
-        ratio={1}
-        minWidth="160px"
-      />
-      <Stack
-        flexGrow={2}
-        whiteSpace="nowrap"
-        overflow="hidden"
-        textOverflow="ellipsis"
+      <LinkBox
+        as={Flex}
+        direction={{ base: "column", md: "row" }}
+        padding={4}
+        gridGap={3}
+        minWidth={0}
+        width="100%"
       >
-        <Heading as="h2">{details.title}</Heading>
-        <VariantDisplay variants={details.variants} selected={item.variants} />
-      </Stack>
-      <Stack alignItems={"end"}>
+        <AspectRatioImage
+          src={details.pictureURL}
+          alt=""
+          ratio={1}
+          minWidth="160px"
+        />
+        <Flex direction="column" overflow="hidden" flexGrow={2}>
+          <LinkOverlay
+            as={Link}
+            to={`/item/${item.itemId}`}
+            flexShrink={2}
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            overflow="hidden"
+            width="100%"
+            display="block"
+          >
+            <Heading as="h2" display="inline">
+              {details.title}
+            </Heading>
+          </LinkOverlay>
+
+          <VariantDisplay
+            variants={details.variants}
+            selected={item.variants}
+          />
+        </Flex>
+      </LinkBox>
+      <Stack
+        alignItems="end"
+        minWidth={0}
+        padding={4}
+        paddingRight={{ base: 4, sm: 8 }}
+      >
         <Text fontSize="3xl" textAlign={"right"}>
           {formatCurrency(item.price ?? details.price)}
         </Text>
@@ -108,36 +153,52 @@ export const CartItem = ({ item, setPrice }: CartItemProps) => {
 export const CartItemSuspense = () => {
   return (
     <Flex
-      direction={{ base: "column", sm: "row" }}
-      padding={4}
-      paddingLeft={4}
-      paddingRight={8}
-      gridGap={3}
+      direction={{ base: "column", md: "row" }}
       bg="white"
       borderRadius="lg"
       shadow="xs"
-      maxWidth="container.md"
+      maxWidth={{ base: 250, md: "container.md" }}
+      margin="0 auto"
       width="100%"
+      justifyContent="space-between"
     >
-      <SuspendedImage src="" alt="" ratio={1} minWidth="160px" />
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        padding={4}
+        gridGap={3}
+        minWidth={0}
+        width="100%"
+      >
+        <AspectRatioImage alt="" ratio={1} minWidth="160px" />
+        <Flex direction="column" overflow="hidden" flexGrow={2}>
+          <Skeleton>
+            <Heading
+              as="h2"
+              display="block"
+              flexShrink={2}
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              overflow="hidden"
+              width="100%"
+            >
+              Nombre del Producto
+            </Heading>
+          </Skeleton>
+        </Flex>
+      </Flex>
       <Stack
-        flexGrow={2}
-        whiteSpace="nowrap"
-        overflow="hidden"
-        textOverflow="ellipsis"
+        alignItems="end"
+        minWidth={0}
+        padding={4}
+        paddingRight={{ base: 4, sm: 8 }}
       >
         <Skeleton>
-          <Heading as="h2">Item name</Heading>
-        </Skeleton>
-      </Stack>
-      <Stack alignItems={"end"}>
-        <Skeleton>
           <Text fontSize="3xl" textAlign={"right"}>
-            $ 100.00
+            {formatCurrency(100)}
           </Text>
         </Skeleton>
         <Skeleton>
-          <ItemCount max={0} min={0} isDisabled />
+          <ItemCount isDisabled value={0} max={0} min={0} />
         </Skeleton>
         <Skeleton>
           <Text
@@ -145,7 +206,7 @@ export const CartItemSuspense = () => {
             textAlign="right"
             sx={{ marginTop: "0!important" }}
           >
-            200 unidades
+            10 unidades
           </Text>
         </Skeleton>
         <Skeleton>
@@ -154,6 +215,7 @@ export const CartItemSuspense = () => {
             display="inline-block"
             variant="link"
             flexGrow={1}
+            disabled
           >
             Quitar del Carrito
           </Button>

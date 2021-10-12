@@ -2,19 +2,23 @@ import {
   AspectRatio,
   Image as ChakraImage,
   Skeleton,
+  Box,
   AspectRatioProps,
+  ChakraComponent,
 } from "@chakra-ui/react";
-import { Suspense } from "react";
+import { ComponentProps, Suspense } from "react";
 import useSWRImmutable from "swr/immutable";
 
-export const useSuspenseImage = (src: string) => {
+export const useSuspenseImage = (src: string | undefined) => {
   const { data } = useSWRImmutable(
     ["image", src],
-    (key, src: string) => {
+    (key, src: string | undefined) => {
       return new Promise<HTMLImageElement>((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.src = src;
+        if (src) {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.src = src;
+        }
       });
     },
     { suspense: true }
@@ -23,43 +27,64 @@ export const useSuspenseImage = (src: string) => {
   return data;
 };
 
-export type SuspendedImageProps = AspectRatioProps & {
-  src: string;
+export const ImageSuspenseLoad = ({ src }: { src?: string }) => {
+  useSuspenseImage(src);
+
+  return <></>;
+};
+
+export type AspectRatioImageProps = AspectRatioProps & {
+  src?: string;
   alt?: string;
 };
 
-const ImageView = ({
-  src,
-  alt = "",
-  ...ratio
-}: SuspendedImageProps) => {
-  useSuspenseImage(src);
-
-  return (
-    <AspectRatio {...ratio}>
-      <ChakraImage src={src} alt={alt} objectFit="cover" />
-    </AspectRatio>
-  );
-};
-
-export const ImageSkeleton = ({
+export const AspectRatioImage = ({
   src,
   alt,
   ...ratio
-}: Partial<SuspendedImageProps>) => {
+}: AspectRatioImageProps) => {
   return (
-    <Skeleton>
+    <Suspense
+      fallback={
+        <Skeleton>
+          <AspectRatio {...ratio}>
+            <ChakraImage />
+          </AspectRatio>
+        </Skeleton>
+      }
+    >
+      <ImageSuspenseLoad src={src} />
       <AspectRatio {...ratio}>
-        <ChakraImage />
+        <ChakraImage src={src} alt={alt} objectFit="cover" />
       </AspectRatio>
-    </Skeleton>
+    </Suspense>
   );
 };
 
-export const SuspendedImage = (props: SuspendedImageProps) => {
+export type ImageBoxProps = ComponentProps<ChakraComponent<"div", {}>> & {
+  src?: string;
+  alt?: string;
+};
+
+export const ImageBox = ({ src, alt, ...box }: ImageBoxProps) => {
   return (
-    <Suspense fallback={<ImageSkeleton {...props} />}>
-      <ImageView {...props} />
+    <Suspense
+      fallback={
+        <Skeleton>
+          <Box {...box}/>
+        </Skeleton>
+      }
+    >
+      <ImageSuspenseLoad src={src} />
+      <Box {...box}>
+        <ChakraImage
+          objectFit="contain"
+          width="100%"
+          height="100%"
+          src={src}
+          alt={alt}
+        />
+      </Box>
     </Suspense>
   );
 };

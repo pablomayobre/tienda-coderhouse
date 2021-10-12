@@ -1,5 +1,6 @@
 import { Badge, Box, Icon, IconButton, Portal } from "@chakra-ui/react";
 import { MdShoppingCart } from "react-icons/md";
+import { Link } from "react-router-dom";
 import { useCart } from "../providers/CartProvider";
 import { NavButton } from "./NavButton";
 
@@ -22,6 +23,8 @@ const FloatingCartButton = ({
     <Portal>
       <Box position="fixed" right={4} bottom={4}>
         <IconButton
+          as={Link}
+          to="/cart"
           position="relative"
           right={0}
           bottom={0}
@@ -69,13 +72,13 @@ const NormalCartButton = ({ items, text }: { items: number; text: string }) => {
 };
 
 export const CartWidget = ({ isFloating }: CartProps) => {
-  const { list } = useCart();
+  const { totalQuantity } = useCart();
 
   const text = "Mi Carrito";
 
   return isFloating ? (
-    <FloatingCartButton text={text} items={list.length} />
+    <FloatingCartButton text={text} items={totalQuantity} />
   ) : (
-    <NormalCartButton text={text} items={list.length} />
+    <NormalCartButton text={text} items={totalQuantity} />
   );
 };
