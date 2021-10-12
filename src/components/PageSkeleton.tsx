@@ -3,7 +3,7 @@ import { NavBar } from "./NavBar"
 
 export const PageSkeleton = () => {
   return <>
-    <Header isLoading>
+    <Header>
       <NavBar isDisabled/>
     </Header>
   </>

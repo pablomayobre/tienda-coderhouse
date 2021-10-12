@@ -14,14 +14,14 @@ const ItemListView = lazy(() => import("./views/ItemListView"));
 const ItemDetailView = lazy(() => import("./views/ItemDetailView"));
 const CartView = lazy(() => import("./views/CartView"));
 const OrderView = lazy(() => import("./views/OrderView"));
-const UserOrders = lazy(() => import("./views/UserOrders"))
+const UserOrders = lazy(() => import("./views/UserOrders"));
 
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <CartProvider>
-        <BrowserRouter>
-          <ApiProvider>
+      <BrowserRouter>
+        <ApiProvider>
+          <CartProvider>
             <Header>
               <NavBar />
             </Header>
@@ -32,13 +32,13 @@ function App() {
                 <Route path="item/:id" element={<ItemDetailView />} />
                 <Route path="category/:category" element={<ItemListView />} />
                 <Route path="cart" element={<CartView />} />
-                <Route path="order/:id" element={<OrderView/>}/>
-                <Route path="user/orders" element={<UserOrders/>}/>
+                <Route path="order/:id" element={<OrderView />} />
+                <Route path="user/orders" element={<UserOrders />} />
               </Routes>
             </Layout>
-          </ApiProvider>
-        </BrowserRouter>
-      </CartProvider>
+          </CartProvider>
+        </ApiProvider>
+      </BrowserRouter>
     </ChakraProvider>
   );
 }

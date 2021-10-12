@@ -1,7 +1,10 @@
 import { Box, Flex, Progress, Spacer } from "@chakra-ui/react";
+import { useIsLoading } from "../api";
 import { Logo } from "./Logo";
 
-export const Header = ({children, isLoading}: {children?: React.ReactNode, isLoading?: boolean}) => {
+export const Header = ({children}: {children?: React.ReactNode}) => {
+  const isLoading = useIsLoading();
+
   return (
     <Box
       as="header"

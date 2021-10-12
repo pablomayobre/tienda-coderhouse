@@ -1,4 +1,12 @@
-import { Suspense } from "react";
+import {
+  createContext,
+  SetStateAction,
+  Dispatch,
+  Suspense,
+  useState,
+  useEffect,
+  useContext,
+} from "react";
 import { getAuth } from "firebase/auth";
 import {
   enableIndexedDbPersistence,
@@ -37,14 +45,47 @@ const Authentication = ({ children }: { children?: React.ReactNode }) => {
   return <AuthProvider sdk={auth}>{children}</AuthProvider>;
 };
 
+const LoadingIndicatorContext = createContext<
+  [number, Dispatch<SetStateAction<number>>]
+>([0, () => {}]);
+
+const LoadingIndicator = ({ children }: { children?: React.ReactNode }) => {
+  const state = useState(0);
+  return (
+    <LoadingIndicatorContext.Provider value={state}>
+      {children}
+    </LoadingIndicatorContext.Provider>
+  );
+};
+
+export const PageLoading = () => {
+  const [, loading] = useContext(LoadingIndicatorContext);
+
+  useEffect(() => {
+    loading((value) => value++);
+
+    return () => loading((value) => value--);
+  }, [loading]);
+
+  return <></>;
+};
+
+export const useIsLoading = () => {
+  const [loading] = useContext(LoadingIndicatorContext);
+
+  return loading > 0;
+};
+
 export const ApiProvider = ({ children }: { children?: React.ReactNode }) => {
   return (
-    <Suspense fallback={<PageSkeleton />}>
-      <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={true}>
-        <Authentication>
-          <Firestore>{children}</Firestore>
-        </Authentication>
-      </FirebaseAppProvider>
-    </Suspense>
+    <LoadingIndicator>
+      <Suspense fallback={<><PageLoading /><PageSkeleton/></>}>
+        <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={true}>
+          <Authentication>
+            <Firestore>{children}</Firestore>
+          </Authentication>
+        </FirebaseAppProvider>
+      </Suspense>
+    </LoadingIndicator>
   );
 };
