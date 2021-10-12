@@ -9,14 +9,14 @@ import {
 } from "@chakra-ui/react";
 import { formatCurrency } from "../api/helpers";
 import { ItemData } from "../api/types";
-import { ImageSkeleton, SuspendedImage } from "./SuspendedImage";
+import { AspectRatioImage } from "./SuspendedImage";
 import { Link } from "react-router-dom";
 
 export const Item = ({ item }: { item: ItemData }) => {
   return (
     <Center >
-    <LinkBox width="100%" bg="white" borderRadius={6} shadow="xs" overflow="hidden" maxWidth={[null, null, 250]} justifyItems="center">
-      <SuspendedImage src={item.pictureURL} alt="" ratio={1} />
+    <LinkBox width="100%" bg="white" borderRadius={6} shadow="xs" overflow="hidden" maxWidth={250} justifyItems="center">
+      <AspectRatioImage src={item.pictureURL} alt="" ratio={1} />
       <Box paddingLeft={4} paddingRight={4} paddingTop={2} paddingBottom={4}>
         <Text fontSize="3xl">{formatCurrency(item.price)}</Text>
         <Heading as="h3" size="md">
@@ -33,7 +33,7 @@ export const Item = ({ item }: { item: ItemData }) => {
 export const ItemSkeleton = () => {
   return (
     <Box bg="white" borderRadius={6} shadow="xs" overflow="hidden">
-      <ImageSkeleton ratio={1} />
+      <AspectRatioImage ratio={1} />
       <Box paddingLeft={4} paddingRight={4} paddingTop={2} paddingBottom={4}>
         <Skeleton marginBottom={1}>
           <Text fontSize="2xl">$100.00</Text>

@@ -1,7 +1,7 @@
 import { Button, Heading, Skeleton, Stack, Text, Flex } from "@chakra-ui/react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useItem } from "../api/useItem";
-import { SuspendedImage } from "./SuspendedImage";
+import { AspectRatioImage } from "./SuspendedImage";
 import { CartData } from "../providers/CartProvider";
 import { GenericVariant } from "../api/types";
 import { formatCurrency } from "../api/helpers";
@@ -49,7 +49,7 @@ export const OrderItem = ({ item }: OrderItemProps) => {
       maxWidth="container.md"
       width="100%"
     >
-      <SuspendedImage
+      <AspectRatioImage
         src={details.pictureURL}
         alt=""
         ratio={1}
@@ -90,7 +90,7 @@ export const OrderItemSuspense = () => {
       maxWidth="container.md"
       width="100%"
     >
-      <SuspendedImage
+      <AspectRatioImage
         src=""
         alt=""
         ratio={1}
