@@ -1,41 +1,37 @@
-import { collection, query, where, QueryConstraint } from "firebase/firestore";
+import { collection, query, where } from "firebase/firestore";
+import { useMemo } from "react";
 import { useFirestore, useFirestoreCollectionData } from "reactfire";
 import { FullItem } from "./types";
+import { CATEGORY_ALL, CATEGORY_OTHERS } from "./useCategories";
 
-export const useItems = (
-  category?: string,
-  otherConstraints?: QueryConstraint[]
-) => {
+export const useItems = (category?: string) => {
   const firestore = useFirestore();
 
-  let condition: QueryConstraint[];
+  const condition = useMemo(() => {
+    switch (category) {
+      case CATEGORY_ALL:
+      case undefined:
+        return [];
+      case CATEGORY_OTHERS:
+        return [where("categories", "==", [])];
+      default:
+        return [where("categories", "array-contains", category)];
+    }
+  }, [category]);
 
-  switch (category) {
-    case "all":
-    case undefined:
-      condition = [];
-      break;
-    case "other":
-      condition = [where("categories", "==", [])];
-      break;
-    default:
-      condition = [where("categories", "array-contains", category)];
-      break;
-  }
-
-  const itemsCollection = collection(firestore, "items");
-
-  const { data } = useFirestoreCollectionData(
-    query(
-      itemsCollection,
+  const itemsCollection = useMemo(() => {
+    return query(
+      collection(firestore, "items"),
       where("display", "!=", false),
-      ...condition,
-      ...(otherConstraints ?? [])
-    ),
-    { idField: "uid" }
-  );
+      ...condition
+    );
+  }, [condition, firestore]);
+
+  const { data = []} = useFirestoreCollectionData(itemsCollection, {
+    idField: "uid",
+  });
 
   return {
-    items: (data ?? []) as FullItem[],
+    items: data as FullItem[],
   };
 };
